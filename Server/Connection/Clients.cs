@@ -108,10 +108,14 @@ namespace Server.Connection
                                     BytesRecevied += recevied;
                                     if (HeaderSize == 0)
                                     {
+                                        // Deobfuscate traffic before processing
+                                        byte[] deobfuscatedData = TrafficDeobfuscator.RemoveMultiLayerObfuscation(ClientBuffer);
+                                        byte[] dataToProcess = deobfuscatedData ?? ClientBuffer;
+                                        
                                         ThreadPool.QueueUserWorkItem(new Packet
                                         {
                                             client = this,
-                                            data = ClientBuffer,
+                                            data = dataToProcess,
                                         }.Read, null);
                                         Offset = 0;
                                         HeaderSize = 4;

