@@ -13,7 +13,7 @@ namespace Server.Handle_Packet
 {
     public class HandleFileSearcher
     {
-        public async void SaveZipFile(Clients client, MsgPack unpack_msgpack)
+        public async Task SaveZipFile(Clients client, MsgPack unpack_msgpack)
         {
             try
             {

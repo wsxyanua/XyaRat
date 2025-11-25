@@ -245,6 +245,7 @@
     <Compile Include="Forms\FormKeylogger.Designer.cs">
       <DependentUpon>FormKeylogger.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\Logger.cs" />
     <Compile Include="Forms\FormPorts.cs">
       <SubType>Form</SubType>
     </Compile>

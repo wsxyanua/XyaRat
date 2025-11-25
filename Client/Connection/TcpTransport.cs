@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Client.Helper;
 
 namespace Client.Connection
 {
@@ -30,8 +31,17 @@ namespace Client.Connection
 
                 if (socket.Connected)
                 {
-                    sslStream = new SslStream(new NetworkStream(socket, true), false, ValidateServerCertificate);
+                    sslStream = new SslStream(new NetworkStream(socket, true), false, CertificatePinning.ValidateServerCertificate);
                     sslStream.AuthenticateAsClient(host, null, SslProtocols.Tls12 | SslProtocols.Tls13, false);
+                    
+                    // Verify encryption strength
+                    if (!CertificatePinning.VerifyEncryption(sslStream))
+                    {
+                        Logger.Log("[TcpTransport] Weak encryption detected, aborting connection", Logger.LogLevel.Error);
+                        Disconnect();
+                        return false;
+                    }
+                    
                     isConnected = true;
                     return true;
                 }
@@ -110,19 +120,6 @@ namespace Client.Connection
         public X509Certificate2 GetCertificate()
         {
             return serverCertificate;
-        }
-
-        private bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            try
-            {
-                serverCertificate = new X509Certificate2(certificate);
-                return Settings.Server_Certificate.Equals(certificate);
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }

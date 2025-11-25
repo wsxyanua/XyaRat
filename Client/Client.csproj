@@ -103,6 +103,7 @@
     <Compile Include="Helper\Camera.cs" />
     <Compile Include="Helper\HwidGen.cs" />
     <Compile Include="Helper\IdSender.cs" />
+    <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\Methods.cs" />
     <Compile Include="Helper\MutexControl.cs" />
     <Compile Include="Helper\NativeMethods.cs" />

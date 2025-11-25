@@ -16,6 +16,7 @@ using System.Media;
 using Server.Helper;
 using System.Threading.Tasks;
 using System.Linq;
+using Server.Helper;
 
 namespace Server.Connection
 {
@@ -188,7 +189,10 @@ namespace Server.Connection
                 SslClient?.Dispose();
                 TcpClient?.Dispose();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.Error($"Client {Ip} dispose error", ex);
+            }
         }
 
         public bool GetListview(string id)

