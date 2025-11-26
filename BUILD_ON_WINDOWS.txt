@@ -1,0 +1,102 @@
+========================================
+  XyaRat - Build on Windows Guide
+========================================
+
+STEP 1: Download Source Code
+========================================
+1. Go to: https://github.com/wsxyanua/XyaRat
+2. Click "Code" -> "Download ZIP"
+3. Extract to: C:\XyaRat
+
+
+STEP 2: Install Requirements (Windows)
+========================================
+1. Visual Studio 2019 or 2022 (Community Edition - FREE)
+   Download: https://visualstudio.microsoft.com/downloads/
+   Required workloads:
+   - .NET desktop development
+   - .NET Framework 4.6.1 targeting pack
+
+2. .NET SDK 9.0
+   Download: https://dotnet.microsoft.com/download/dotnet/9.0
+
+3. Node.js 20 LTS
+   Download: https://nodejs.org/
+
+
+STEP 3: Build with Visual Studio
+========================================
+1. Open XyaRat.sln in Visual Studio
+2. Right-click solution -> "Restore NuGet Packages"
+3. Select "Release" configuration (top toolbar)
+4. Press F6 or Build -> Build Solution
+5. Output: Binaries\Release\XyaRat.exe
+
+
+STEP 4: Build with Command Line (Alternative)
+========================================
+1. Open "Developer Command Prompt for VS 2022"
+2. Navigate: cd C:\XyaRat
+3. Run: build.bat
+4. Output: Binaries\Release\XyaRat.exe
+
+
+STEP 5: Test in Windows Sandbox
+========================================
+1. Enable Windows Sandbox:
+   - Settings -> Apps -> Optional Features
+   - Add "Windows Sandbox"
+   - Restart PC
+
+2. Copy build output:
+   - Copy entire Binaries\Release folder
+   - Paste into Sandbox desktop
+
+3. Run in Sandbox:
+   - Double-click XyaRat.exe
+   - Configure port (default: 5656)
+   - Click "Start Listening"
+
+
+PACKAGE CONTENTS (After Build)
+========================================
+Binaries\Release\
+  ├── XyaRat.exe          Main RAT Server
+  ├── Stub\
+  │   └── Client.exe      RAT Client (deploy this)
+  ├── Plugins\            All plugin DLLs
+  └── Dependencies\       Required libraries
+
+
+TROUBLESHOOTING
+========================================
+Build Error: "MSBuild.ILMerge.Task not found"
+  -> Solution: Restore NuGet packages first
+
+Build Error: "Framework 4.6.1 not found"
+  -> Solution: Install via Visual Studio Installer
+
+WebPanel Build Error:
+  -> Run: dotnet restore WebPanel\WebPanel.csproj
+  -> Run: dotnet publish WebPanel\WebPanel.csproj -c Release
+
+
+SECURITY NOTES
+========================================
+- Test in isolated environment (Sandbox/VM)
+- Antivirus may flag as malware (expected for RAT)
+- Add exclusion or disable temporarily
+- For educational/authorized testing only
+
+
+BUILD TIMES
+========================================
+- Full build: ~5-10 minutes (first time)
+- Incremental: ~1-2 minutes
+- WebPanel: ~2-3 minutes
+
+
+SUPPORT
+========================================
+- GitHub Issues: https://github.com/wsxyanua/XyaRat/issues
+- Check USAGE.txt for deployment instructions
