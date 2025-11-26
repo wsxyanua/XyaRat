@@ -7,44 +7,58 @@ namespace Server.Helper
 {
     public static class ModernTheme
     {
-        // Modern Dark Theme Colors
+        // Ultra Modern 2025 Theme Colors - Cyberpunk/Neon Style
         public static class Colors
         {
-            // Primary Colors
-            public static readonly Color Primary = ColorTranslator.FromHtml("#2196F3");        // Blue
-            public static readonly Color PrimaryDark = ColorTranslator.FromHtml("#1976D2");
-            public static readonly Color PrimaryLight = ColorTranslator.FromHtml("#BBDEFB");
+            // Primary Colors - Electric Blue & Purple Gradient
+            public static readonly Color Primary = ColorTranslator.FromHtml("#7C3AED");        // Vivid Purple
+            public static readonly Color PrimaryDark = ColorTranslator.FromHtml("#5B21B6");
+            public static readonly Color PrimaryLight = ColorTranslator.FromHtml("#A78BFA");
             
-            // Accent Colors
-            public static readonly Color Accent = ColorTranslator.FromHtml("#FF5722");          // Deep Orange
-            public static readonly Color AccentLight = ColorTranslator.FromHtml("#FF7043");
+            // Accent Colors - Neon Cyan
+            public static readonly Color Accent = ColorTranslator.FromHtml("#06B6D4");          // Cyan
+            public static readonly Color AccentLight = ColorTranslator.FromHtml("#22D3EE");
+            public static readonly Color AccentDark = ColorTranslator.FromHtml("#0891B2");
+            
+            // Secondary Accent - Hot Pink
+            public static readonly Color Pink = ColorTranslator.FromHtml("#EC4899");
+            public static readonly Color PinkLight = ColorTranslator.FromHtml("#F472B6");
             
             // Success/Warning/Error
-            public static readonly Color Success = ColorTranslator.FromHtml("#4CAF50");         // Green
-            public static readonly Color Warning = ColorTranslator.FromHtml("#FFC107");         // Amber
-            public static readonly Color Error = ColorTranslator.FromHtml("#F44336");           // Red
+            public static readonly Color Success = ColorTranslator.FromHtml("#10B981");         // Emerald
+            public static readonly Color Warning = ColorTranslator.FromHtml("#F59E0B");         // Amber
+            public static readonly Color Error = ColorTranslator.FromHtml("#EF4444");           // Red
             
-            // Dark Theme
-            public static readonly Color DarkBackground = ColorTranslator.FromHtml("#1E1E1E");  // VS Code Dark
-            public static readonly Color DarkSurface = ColorTranslator.FromHtml("#252526");
-            public static readonly Color DarkPanel = ColorTranslator.FromHtml("#2D2D30");
-            public static readonly Color DarkBorder = ColorTranslator.FromHtml("#3E3E42");
+            // Modern Dark Theme - Deeper blacks with subtle gradients
+            public static readonly Color DarkBackground = ColorTranslator.FromHtml("#0A0A0A");  // Almost Black
+            public static readonly Color DarkSurface = ColorTranslator.FromHtml("#121212");     // Dark Gray
+            public static readonly Color DarkPanel = ColorTranslator.FromHtml("#1A1A1A");       // Darker Gray
+            public static readonly Color DarkBorder = ColorTranslator.FromHtml("#2A2A2A");      // Border
+            public static readonly Color DarkElevated = ColorTranslator.FromHtml("#1F1F1F");    // Elevated surface
             
-            // Text Colors
-            public static readonly Color TextPrimary = ColorTranslator.FromHtml("#FFFFFF");
-            public static readonly Color TextSecondary = ColorTranslator.FromHtml("#CCCCCC");
-            public static readonly Color TextDisabled = ColorTranslator.FromHtml("#6A6A6A");
+            // Text Colors - Higher contrast
+            public static readonly Color TextPrimary = ColorTranslator.FromHtml("#F5F5F5");
+            public static readonly Color TextSecondary = ColorTranslator.FromHtml("#D1D5DB");
+            public static readonly Color TextDisabled = ColorTranslator.FromHtml("#6B7280");
+            public static readonly Color TextNeon = ColorTranslator.FromHtml("#22D3EE");        // Neon text
             
-            // ListView Colors
-            public static readonly Color ListViewItem = ColorTranslator.FromHtml("#2D2D30");
-            public static readonly Color ListViewItemAlt = ColorTranslator.FromHtml("#252526");
-            public static readonly Color ListViewItemHover = ColorTranslator.FromHtml("#3E3E42");
-            public static readonly Color ListViewItemSelected = ColorTranslator.FromHtml("#094771");
+            // ListView Colors - Modern with gradient feel
+            public static readonly Color ListViewItem = ColorTranslator.FromHtml("#1A1A1A");
+            public static readonly Color ListViewItemAlt = ColorTranslator.FromHtml("#151515");
+            public static readonly Color ListViewItemHover = ColorTranslator.FromHtml("#252525");
+            public static readonly Color ListViewItemSelected = ColorTranslator.FromHtml("#7C3AED");  // Purple selection
+            public static readonly Color ListViewItemSelectedGlow = ColorTranslator.FromHtml("#A78BFA"); // Glow effect
             
-            // Status Colors
-            public static readonly Color Online = ColorTranslator.FromHtml("#4CAF50");
-            public static readonly Color Idle = ColorTranslator.FromHtml("#FFC107");
-            public static readonly Color Offline = ColorTranslator.FromHtml("#9E9E9E");
+            // Status Colors - Vibrant
+            public static readonly Color Online = ColorTranslator.FromHtml("#10B981");
+            public static readonly Color Idle = ColorTranslator.FromHtml("#F59E0B");
+            public static readonly Color Offline = ColorTranslator.FromHtml("#6B7280");
+            
+            // Neon Glow Colors
+            public static readonly Color NeonBlue = ColorTranslator.FromHtml("#3B82F6");
+            public static readonly Color NeonPurple = ColorTranslator.FromHtml("#8B5CF6");
+            public static readonly Color NeonPink = ColorTranslator.FromHtml("#EC4899");
+            public static readonly Color NeonCyan = ColorTranslator.FromHtml("#06B6D4");
         }
         
         // Apply modern theme to Form
@@ -53,8 +67,30 @@ namespace Server.Helper
             form.BackColor = Colors.DarkBackground;
             form.ForeColor = Colors.TextPrimary;
             
+            // Add gradient background paint event
+            form.Paint += Form_Paint;
+            
             // Apply theme to all controls recursively
             ApplyThemeToControls(form.Controls);
+        }
+        
+        private static void Form_Paint(object sender, PaintEventArgs e)
+        {
+            Form form = sender as Form;
+            if (form == null) return;
+            
+            Graphics g = e.Graphics;
+            
+            // Subtle gradient background
+            using (System.Drawing.Drawing2D.LinearGradientBrush brush = 
+                new System.Drawing.Drawing2D.LinearGradientBrush(
+                    form.ClientRectangle,
+                    Colors.DarkBackground,
+                    Colors.DarkSurface,
+                    135f)) // Diagonal gradient
+            {
+                g.FillRectangle(brush, form.ClientRectangle);
+            }
         }
         
         private static void ApplyThemeToControls(Control.ControlCollection controls)
@@ -124,22 +160,20 @@ namespace Server.Helper
             listView.BackColor = Colors.DarkSurface;
             listView.ForeColor = Colors.TextPrimary;
             listView.BorderStyle = BorderStyle.None;
-            listView.OwnerDraw = false; // Let Windows handle drawing for better performance
+            listView.OwnerDraw = false;
             listView.FullRowSelect = true;
             listView.GridLines = false;
             listView.View = View.Details;
             
-            // Modern font
-            listView.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
-            
-            // Set header style
-            if (listView.View == View.Details)
+            // Modern font with better readability
+            listView.Font = new Font("Inter", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            if (listView.Font.Name != "Inter")
             {
-                foreach (ColumnHeader column in listView.Columns)
-                {
-                    column.Width = column.Width; // Refresh
-                }
+                listView.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
             }
+            
+            // Add subtle border
+            listView.Padding = new Padding(1);
         }
         
         public static void ApplyMenuStripTheme(MenuStrip menuStrip)
@@ -147,7 +181,8 @@ namespace Server.Helper
             menuStrip.BackColor = Colors.DarkPanel;
             menuStrip.ForeColor = Colors.TextPrimary;
             menuStrip.Renderer = new ModernMenuStripRenderer();
-            menuStrip.Font = new Font("Segoe UI", 9F);
+            menuStrip.Font = new Font("Segoe UI Semibold", 9F);
+            menuStrip.Padding = new Padding(6, 4, 0, 4);
         }
         
         public static void ApplyStatusStripTheme(StatusStrip statusStrip)
@@ -156,27 +191,74 @@ namespace Server.Helper
             statusStrip.ForeColor = Colors.TextSecondary;
             statusStrip.Renderer = new ModernToolStripRenderer();
             statusStrip.Font = new Font("Segoe UI", 9F);
+            statusStrip.SizingGrip = false;
         }
         
         public static void ApplyTabControlTheme(TabControl tabControl)
         {
             tabControl.BackColor = Colors.DarkSurface;
             tabControl.ForeColor = Colors.TextPrimary;
-            tabControl.Font = new Font("Segoe UI", 9F);
+            tabControl.Font = new Font("Segoe UI Semibold", 9.5F);
+            tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl.DrawItem += TabControl_DrawItem;
             
             foreach (TabPage tabPage in tabControl.TabPages)
             {
                 tabPage.BackColor = Colors.DarkSurface;
                 tabPage.ForeColor = Colors.TextPrimary;
+                tabPage.BorderStyle = BorderStyle.None;
+            }
+        }
+        
+        // Custom tab drawing with gradient and glow
+        private static void TabControl_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            TabControl tabControl = sender as TabControl;
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            
+            TabPage tabPage = tabControl.TabPages[e.Index];
+            Rectangle tabRect = tabControl.GetTabRect(e.Index);
+            
+            bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
+            
+            // Background
+            using (SolidBrush bgBrush = new SolidBrush(isSelected ? Colors.DarkElevated : Colors.DarkPanel))
+            {
+                g.FillRectangle(bgBrush, tabRect);
+            }
+            
+            // Bottom accent line for selected tab
+            if (isSelected)
+            {
+                using (Pen accentPen = new Pen(Colors.Primary, 3))
+                {
+                    g.DrawLine(accentPen, tabRect.Left, tabRect.Bottom - 2, tabRect.Right, tabRect.Bottom - 2);
+                }
+            }
+            
+            // Text with glow effect for selected
+            using (Font font = new Font("Segoe UI Semibold", 9F))
+            {
+                Color textColor = isSelected ? Colors.TextPrimary : Colors.TextSecondary;
+                using (SolidBrush textBrush = new SolidBrush(textColor))
+                {
+                    StringFormat sf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    g.DrawString(tabPage.Text, font, textBrush, tabRect, sf);
+                }
             }
         }
         
         public static void ApplyTextBoxTheme(TextBox textBox)
         {
-            textBox.BackColor = Colors.DarkPanel;
+            textBox.BackColor = Colors.DarkElevated;
             textBox.ForeColor = Colors.TextPrimary;
             textBox.BorderStyle = BorderStyle.FixedSingle;
-            textBox.Font = new Font("Consolas", 9F);
+            textBox.Font = new Font("Consolas", 9.5F);
         }
         
         public static void ApplyButtonTheme(Button button)
@@ -185,10 +267,33 @@ namespace Server.Helper
             button.ForeColor = Colors.TextPrimary;
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.FlatAppearance.MouseOverBackColor = Colors.PrimaryDark;
-            button.FlatAppearance.MouseDownBackColor = Colors.PrimaryLight;
-            button.Font = new Font("Segoe UI", 9F);
+            button.FlatAppearance.BorderColor = Colors.PrimaryLight;
+            button.FlatAppearance.MouseOverBackColor = Colors.PrimaryLight;
+            button.FlatAppearance.MouseDownBackColor = Colors.PrimaryDark;
+            button.Font = new Font("Segoe UI Semibold", 9.5F);
             button.Cursor = Cursors.Hand;
+            button.Padding = new Padding(12, 6, 12, 6);
+            
+            // Add rounded corners effect through paint event
+            button.Paint += Button_Paint;
+        }
+        
+        private static void Button_Paint(object sender, PaintEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn == null) return;
+            
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            
+            // Draw subtle glow when mouse over
+            if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
+            {
+                using (Pen glowPen = new Pen(Colors.PrimaryLight, 2))
+                {
+                    Rectangle glowRect = new Rectangle(1, 1, btn.Width - 3, btn.Height - 3);
+                    e.Graphics.DrawRectangle(glowPen, glowRect);
+                }
+            }
         }
         
         // Context Menu Theme
@@ -225,14 +330,48 @@ namespace Server.Helper
             else
             {
                 Rectangle rc = new Rectangle(Point.Empty, e.Item.Size);
-                e.Graphics.FillRectangle(new SolidBrush(ModernTheme.Colors.Primary), rc);
+                
+                // Gradient fill for selected item
+                using (System.Drawing.Drawing2D.LinearGradientBrush brush = 
+                    new System.Drawing.Drawing2D.LinearGradientBrush(
+                        rc,
+                        ModernTheme.Colors.Primary,
+                        ModernTheme.Colors.PrimaryLight,
+                        System.Drawing.Drawing2D.LinearGradientMode.Horizontal))
+                {
+                    e.Graphics.FillRectangle(brush, rc);
+                }
+                
+                // Subtle glow border
+                using (Pen glowPen = new Pen(ModernTheme.Colors.AccentLight, 1))
+                {
+                    e.Graphics.DrawRectangle(glowPen, 0, 0, rc.Width - 1, rc.Height - 1);
+                }
             }
         }
         
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
             e.TextColor = e.Item.Selected ? ModernTheme.Colors.TextPrimary : ModernTheme.Colors.TextSecondary;
+            e.TextFont = new Font("Segoe UI", 9F, e.Item.Selected ? FontStyle.Bold : FontStyle.Regular);
             base.OnRenderItemText(e);
+        }
+        
+        protected override void OnRenderSeparator(ToolStripSeparatorRenderEventArgs e)
+        {
+            // Custom separator with gradient
+            if (e.Vertical)
+            {
+                base.OnRenderSeparator(e);
+            }
+            else
+            {
+                int y = e.Item.Height / 2;
+                using (Pen pen = new Pen(ModernTheme.Colors.DarkBorder, 1))
+                {
+                    e.Graphics.DrawLine(pen, 30, y, e.Item.Width - 5, y);
+                }
+            }
         }
     }
     
