@@ -39,11 +39,11 @@ jobs:
 
     # Install NuGet packages
     - name: Install NuGet Packages
-      run: nuget restore DcRat.sln
+      run: nuget restore XyaRat.sln
 
     # Build RAT solution (Server + Client + Plugins)
     - name: Build RAT Solution
-      run: msbuild -nologo -v:m -p:Configuration=${{ matrix.configuration }} DcRat.sln
+      run: msbuild -nologo -v:m -p:Configuration=${{ matrix.configuration }} XyaRat.sln
     
     # Build WebPanel Backend
     - name: Build WebPanel
@@ -100,7 +100,7 @@ jobs:
           **Branch:** ${{ github.ref }}
           
           ### 📦 Packages Included:
-          - **DcRat.zip**: Server + Client + All Plugins
+          - **XyaRat.zip**: Server + Client + All Plugins
           - **WebPanel.zip**: Web Admin Panel (ASP.NET Core 9.0 + React)
           
           ### ⚠️ Security Notice:
@@ -112,14 +112,14 @@ jobs:
         prerelease: true
         
     # Upload RAT Package
-    - name: Upload DcRat Package
+    - name: Upload XyaRat Package
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./DcRat.zip
-        asset_name: DcRat-${{ github.sha }}.zip
+        asset_path: ./XyaRat.zip
+        asset_name: XyaRat-${{ github.sha }}.zip
         asset_content_type: application/zip
     
     # Upload WebPanel Package

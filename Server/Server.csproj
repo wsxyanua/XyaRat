@@ -8,7 +8,7 @@
     <ProjectGuid>{7767C300-5FD5-4A5D-9D4C-59559CCE48A3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Server</RootNamespace>
-    <AssemblyName>DcRat</AssemblyName>
+    <AssemblyName>XyaRat</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -56,7 +56,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\DcRat.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\XyaRat.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
@@ -494,14 +494,14 @@
     <None Include="Resources\icon.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\DcRat_png.png" />
+    <None Include="Resources\XyaRat_png.png" />
     <None Include="Resources\Keylogger.exe" />
     <None Include="Resources\online.wav" />
     <None Include="Resources\offline.wav" />
     <None Include="Resources\avatar.png" />
     <None Include="Resources\avatar1.png" />
     <Content Include="ILMergeOrder.txt" />
-    <Content Include="Resources\DcRat.ico" />
+    <Content Include="Resources\XyaRat.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">

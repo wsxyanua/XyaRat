@@ -32,11 +32,11 @@ jobs:
 
     # Install NuGet packages
     - name: Install NuGet Packages
-      run: nuget restore DcRat.sln
+      run: nuget restore XyaRat.sln
 
     # Build RAT solution
     - name: Build RAT Solution
-      run: msbuild -nologo -v:m -p:Configuration=Release DcRat.sln
+      run: msbuild -nologo -v:m -p:Configuration=Release XyaRat.sln
     
     # Build WebPanel Backend
     - name: Build WebPanel
@@ -86,8 +86,8 @@ jobs:
           
           ### 📦 What's Included:
           
-          #### DcRat.zip
-          - **Server (DcRat.exe)**: Main RAT server with GUI
+          #### XyaRat.zip
+          - **Server (XyaRat.exe)**: Main RAT server with GUI
           - **Client (Client.exe)**: RAT client/stub
           - **Plugins**: All plugin DLLs
             - FileManager, ProcessManager, RemoteDesktop
@@ -107,8 +107,8 @@ jobs:
           ### 🚀 Quick Start:
           
           **RAT Server:**
-          1. Extract `DcRat.zip`
-          2. Run `DcRat.exe`
+          1. Extract `XyaRat.zip`
+          2. Run `XyaRat.exe`
           3. Configure port and certificate
           
           **WebPanel:**
@@ -136,14 +136,14 @@ jobs:
         prerelease: false
         
     # Upload RAT Package
-    - name: Upload DcRat Package
+    - name: Upload XyaRat Package
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./DcRat.zip
-        asset_name: DcRat-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_path: ./XyaRat.zip
+        asset_name: XyaRat-${{ steps.get_version.outputs.VERSION }}.zip
         asset_content_type: application/zip
     
     # Upload WebPanel Package

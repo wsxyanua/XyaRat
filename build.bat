@@ -31,7 +31,7 @@ echo OK: All prerequisites installed
 
 echo.
 echo [2/7] Restoring NuGet packages...
-nuget restore DcRat.sln
+nuget restore XyaRat.sln
 if %errorlevel% neq 0 (
     echo ERROR: NuGet restore failed
     exit /b 1
@@ -40,7 +40,7 @@ echo OK: NuGet packages restored
 
 echo.
 echo [3/7] Building RAT Solution (Server + Client + Plugins)...
-msbuild /nologo /v:minimal /p:Configuration=Release DcRat.sln
+msbuild /nologo /v:minimal /p:Configuration=Release XyaRat.sln
 if %errorlevel% neq 0 (
     echo ERROR: RAT build failed
     exit /b 1
@@ -73,13 +73,13 @@ cd ..\..
 echo OK: WebPanel frontend built successfully
 
 echo.
-echo [6/7] Packaging DcRat...
-powershell -Command "Compress-Archive -Path 'Binaries\Release\*' -DestinationPath 'DcRat.zip' -Force"
+echo [6/7] Packaging XyaRat...
+powershell -Command "Compress-Archive -Path 'Binaries\Release\*' -DestinationPath 'XyaRat.zip' -Force"
 if %errorlevel% neq 0 (
-    echo ERROR: Failed to package DcRat
+    echo ERROR: Failed to package XyaRat
     exit /b 1
 )
-echo OK: DcRat packaged: DcRat.zip
+echo OK: XyaRat packaged: XyaRat.zip
 
 echo.
 echo [7/7] Packaging WebPanel...
@@ -97,11 +97,11 @@ echo ========================================
 echo.
 echo Build Output:
 echo   - Binaries\Release\       : Compiled executables
-echo   - DcRat.zip               : RAT package
+echo   - XyaRat.zip               : RAT package
 echo   - WebPanel.zip            : Web Admin Panel
 echo.
 echo Executables:
-echo   - Binaries\Release\DcRat.exe          : Main RAT Server
+echo   - Binaries\Release\XyaRat.exe          : Main RAT Server
 echo   - Binaries\Release\Stub\Client.exe    : RAT Client/Stub
 echo   - WebPanel\bin\Release\publish\WebPanel.exe : Web Panel
 echo.
