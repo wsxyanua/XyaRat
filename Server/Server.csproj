@@ -233,6 +233,9 @@
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ModernSplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FormFileSearcher.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -248,6 +251,7 @@
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\CertificateManager.cs" />
     <Compile Include="Helper\TrafficDeobfuscator.cs" />
+    <Compile Include="Helper\ModernTheme.cs" />
     <Compile Include="Forms\FormPorts.cs">
       <SubType>Form</SubType>
     </Compile>

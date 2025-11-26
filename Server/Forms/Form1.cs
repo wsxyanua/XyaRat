@@ -41,6 +41,54 @@ namespace Server
                 Name = "DOS",
                 Text = "DOS",
             };
+            
+            // Apply Modern Theme
+            ApplyModernTheme();
+        }
+        
+        private void ApplyModernTheme()
+        {
+            try
+            {
+                // Apply modern dark theme to main form
+                ModernTheme.ApplyTheme(this);
+                
+                // Apply theme to context menus
+                ModernTheme.ApplyContextMenuTheme(contextMenuClient);
+                ModernTheme.ApplyContextMenuTheme(contextMenuLogs);
+                ModernTheme.ApplyContextMenuTheme(contextMenuThumbnail);
+                ModernTheme.ApplyContextMenuTheme(contextMenuTasks);
+                
+                // Custom styling for main components
+                this.BackColor = ModernTheme.Colors.DarkBackground;
+                menuStrip1.BackColor = ModernTheme.Colors.DarkPanel;
+                statusStrip1.BackColor = ModernTheme.Colors.DarkPanel;
+                
+                // ListView custom colors
+                listView1.BackColor = ModernTheme.Colors.DarkSurface;
+                listView1.ForeColor = ModernTheme.Colors.TextPrimary;
+                listView2.BackColor = ModernTheme.Colors.DarkSurface;
+                listView2.ForeColor = ModernTheme.Colors.TextPrimary;
+                listView3.BackColor = ModernTheme.Colors.DarkSurface;
+                listView3.ForeColor = ModernTheme.Colors.TextPrimary;
+                listView4.BackColor = ModernTheme.Colors.DarkSurface;
+                listView4.ForeColor = ModernTheme.Colors.TextPrimary;
+                
+                // TabControl styling
+                tabControl1.BackColor = ModernTheme.Colors.DarkSurface;
+                foreach (TabPage tab in tabControl1.TabPages)
+                {
+                    tab.BackColor = ModernTheme.Colors.DarkSurface;
+                    tab.ForeColor = ModernTheme.Colors.TextPrimary;
+                }
+                
+                // Modern font
+                this.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error applying theme: " + ex.Message);
+            }
         }
 
 

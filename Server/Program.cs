@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Server.Forms;
 
 namespace Server
 {
@@ -23,9 +24,18 @@ namespace Server
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+            // Show modern splash screen
+            ModernSplashScreen splash = new ModernSplashScreen();
+            splash.Show();
+            splash.StartAutoClose(2500);
+            Application.DoEvents();
+            System.Threading.Thread.Sleep(2500);
+            
             form1 = new Form1();
             Application.Run(form1);
         }
         public static Form1 form1;
     }
 }
+
