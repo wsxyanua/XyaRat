@@ -1,8 +1,10 @@
-name: Build DcRat
+name: Build XyaRat
 
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ main ]
 
@@ -16,13 +18,15 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@main
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v1
+    # Install .NET SDK 9.0
+    - name: Install .NET 9.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
       
     # Install 7Zip PowerShell Module
     - name: Install 7Zip PowerShell Module
@@ -31,51 +35,100 @@ jobs:
 
     # Add MSBuild to the PATH
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
 
     # Install NuGet packages
     - name: Install NuGet Packages
       run: nuget restore DcRat.sln
 
-    # Build solution
-    - name: Build solution
+    # Build RAT solution (Server + Client + Plugins)
+    - name: Build RAT Solution
       run: msbuild -nologo -v:m -p:Configuration=${{ matrix.configuration }} DcRat.sln
+    
+    # Build WebPanel Backend
+    - name: Build WebPanel
+      run: dotnet publish WebPanel/WebPanel.csproj -c Release -o WebPanel/bin/Release/publish
+    
+    # Build WebPanel Frontend
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Build React Frontend
+      shell: powershell
+      run: |
+        cd WebPanel/ClientApp
+        npm install
+        npm run build
         
     # Build Artifact
     - name: Build Artifact
       shell: cmd
       run: call .\ArtifactBuild.cmd
+    
+    # Package WebPanel
+    - name: Package WebPanel
+      shell: powershell
+      run: |
+        Compress-Archive -Path "WebPanel/bin/Release/publish/*" -DestinationPath "WebPanel.zip"
       
-    # Delete-tag-and-release
+    # Delete previous AutoBuild release
     - name: Delete-tag-and-release
-      uses: dev-drprasad/delete-tag-and-release@v0.2.0
+      uses: dev-drprasad/delete-tag-and-release@v1.0
       with:
-        delete_release: true # default: false
-        tag_name: AutoBuild # tag name to delete
+        delete_release: true
+        tag_name: AutoBuild
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
     
     # Create Release
     - name: Create Release
       id: create_release
-      uses: actions/create-release@latest
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: AutoBuild
-        release_name: AutoBuild
-        body: ${{ steps.changelog.outputs.changelog }}
+        release_name: XyaRat AutoBuild
+        body: |
+          ## 🚀 XyaRat Automatic Build
+          
+          **Build Date:** ${{ github.event.head_commit.timestamp }}
+          **Commit:** ${{ github.sha }}
+          **Branch:** ${{ github.ref }}
+          
+          ### 📦 Packages Included:
+          - **DcRat.zip**: Server + Client + All Plugins
+          - **WebPanel.zip**: Web Admin Panel (ASP.NET Core 9.0 + React)
+          
+          ### ⚠️ Security Notice:
+          This is for educational and authorized testing purposes only.
+          
+          ---
+          Latest Commit: ${{ github.event.head_commit.message }}
         draft: false
         prerelease: true
         
-    # Upload Release Asset
-    - name: Upload Release Asset
-      id: upload-release-asset 
+    # Upload RAT Package
+    - name: Upload DcRat Package
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./DcRat.zip
-        asset_name: DcRat.zip
+        asset_name: DcRat-${{ github.sha }}.zip
+        asset_content_type: application/zip
+    
+    # Upload WebPanel Package
+    - name: Upload WebPanel Package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./WebPanel.zip
+        asset_name: WebPanel-${{ github.sha }}.zip
         asset_content_type: application/zip

