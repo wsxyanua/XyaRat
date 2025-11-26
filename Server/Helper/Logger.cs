@@ -7,6 +7,8 @@ namespace Server.Helper
 {
     public static class Logger
     {
+        public enum LogLevel { Info, Warning, Error, Debug }
+
         private static readonly object lockObj = new object();
         private static readonly string logPath = Path.Combine(
             Application.StartupPath, 
@@ -76,6 +78,17 @@ namespace Server.Helper
             catch
             {
                 // Silent fail for logger itself
+            }
+        }
+
+        public static void Log(string message, LogLevel level = LogLevel.Info)
+        {
+            switch (level)
+            {
+                case LogLevel.Info: Info(message); break;
+                case LogLevel.Warning: Warning(message); break;
+                case LogLevel.Error: Error(message); break;
+                case LogLevel.Debug: Info($"[DEBUG] {message}"); break;
             }
         }
     }

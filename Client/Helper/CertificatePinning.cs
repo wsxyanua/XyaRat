@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using System.Security.Authentication;
 
 namespace Client.Helper
 {

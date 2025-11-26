@@ -95,6 +95,14 @@ namespace Client.Connection
             }
         }
 
+        public void RecordFailure()
+        {
+            lock (lockObject)
+            {
+                currentRetryCount++;
+            }
+        }
+
         private void ApplyBackoffDelay()
         {
             if (lastConnectionAttempt == DateTime.MinValue)

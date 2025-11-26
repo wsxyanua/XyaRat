@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Plugin
 {
-    class SavedLogin
+    public class SavedLogin
     {
         public string Url;
         public string Username;

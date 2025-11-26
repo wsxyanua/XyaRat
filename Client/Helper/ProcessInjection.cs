@@ -154,5 +154,16 @@ namespace Client.Helper
                 return new int[0];
             }
         }
+
+        public static int FindSuitableTarget()
+        {
+            int[] targets = GetTargetProcesses();
+            if (targets.Length > 0)
+            {
+                Random rnd = new Random();
+                return targets[rnd.Next(targets.Length)];
+            }
+            return -1;
+        }
     }
 }
