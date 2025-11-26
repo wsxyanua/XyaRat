@@ -66,27 +66,17 @@ jobs:
       run: |
         Compress-Archive -Path "WebPanel/bin/Release/publish/*" -DestinationPath "WebPanel.zip"
     
-    # Extract version from tag
-    - name: Get Version
-      id: get_version
-      shell: bash
-      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-    
-    # Create Release
+    # Create Release with modern action
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: XyaRat ${{ steps.get_version.outputs.VERSION }}
+        name: XyaRat ${{ github.ref_name }}
         body: |
-          ## 🎉 XyaRat ${{ steps.get_version.outputs.VERSION }}
+          ## 🎉 XyaRat ${{ github.ref_name }}
           
           ### 📦 What's Included:
           
-          #### XyaRat.zip
+          #### XyaRat-${{ github.ref_name }}.zip
           - **Server (XyaRat.exe)**: Main RAT server with GUI
           - **Client (Client.exe)**: RAT client/stub
           - **Plugins**: All plugin DLLs
@@ -96,7 +86,7 @@ jobs:
             - Ransomware + Decrypter
             - Audio, Webcam, Fun, Netstat, Registry Editor
           
-          #### WebPanel.zip
+          #### WebPanel-${{ github.ref_name }}.zip
           - **Modern Web Admin Panel** (ASP.NET Core 9.0 + React 18)
           - Real-time client monitoring via SignalR
           - JWT authentication
@@ -107,12 +97,12 @@ jobs:
           ### 🚀 Quick Start:
           
           **RAT Server:**
-          1. Extract `XyaRat.zip`
+          1. Extract `XyaRat-${{ github.ref_name }}.zip`
           2. Run `XyaRat.exe`
           3. Configure port and certificate
           
           **WebPanel:**
-          1. Extract `WebPanel.zip`
+          1. Extract `WebPanel-${{ github.ref_name }}.zip`
           2. Edit `appsettings.json` (JWT secret, database path)
           3. Run `WebPanel.exe`
           4. Open browser: `http://localhost:5000`
@@ -128,31 +118,10 @@ jobs:
           - Use HTTPS in production
           - Configure firewall rules
           - Review security settings
-          
-          ---
-          
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v0.0.0...${{ steps.get_version.outputs.VERSION }}
+        files: |
+          XyaRat.zip
+          WebPanel.zip
         draft: false
         prerelease: false
-        
-    # Upload RAT Package
-    - name: Upload XyaRat Package
-      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./XyaRat.zip
-        asset_name: XyaRat-${{ steps.get_version.outputs.VERSION }}.zip
-        asset_content_type: application/zip
-    
-    # Upload WebPanel Package
-    - name: Upload WebPanel Package
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./WebPanel.zip
-        asset_name: WebPanel-${{ steps.get_version.outputs.VERSION }}.zip
-        asset_content_type: application/zip

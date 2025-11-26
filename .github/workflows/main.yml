@@ -83,15 +83,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
     
-    # Create Release
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # Create Release with modern action
+    - name: Create AutoBuild Release
+      uses: softprops/action-gh-release@v1
       with:
         tag_name: AutoBuild
-        release_name: XyaRat AutoBuild
+        name: XyaRat AutoBuild
         body: |
           ## 🚀 XyaRat Automatic Build
           
@@ -100,35 +97,18 @@ jobs:
           **Branch:** ${{ github.ref }}
           
           ### 📦 Packages Included:
-          - **XyaRat.zip**: Server + Client + All Plugins
-          - **WebPanel.zip**: Web Admin Panel (ASP.NET Core 9.0 + React)
+          - **XyaRat-${{ github.sha }}.zip**: Server + Client + All Plugins
+          - **WebPanel-${{ github.sha }}.zip**: Web Admin Panel (ASP.NET Core 9.0 + React)
           
           ### ⚠️ Security Notice:
           This is for educational and authorized testing purposes only.
           
           ---
           Latest Commit: ${{ github.event.head_commit.message }}
+        files: |
+          XyaRat.zip
+          WebPanel.zip
         draft: false
         prerelease: true
-        
-    # Upload RAT Package
-    - name: Upload XyaRat Package
-      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./XyaRat.zip
-        asset_name: XyaRat-${{ github.sha }}.zip
-        asset_content_type: application/zip
-    
-    # Upload WebPanel Package
-    - name: Upload WebPanel Package
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./WebPanel.zip
-        asset_name: WebPanel-${{ github.sha }}.zip
-        asset_content_type: application/zip
