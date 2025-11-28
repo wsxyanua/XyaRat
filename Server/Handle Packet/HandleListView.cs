@@ -34,7 +34,10 @@ namespace Server.Handle_Packet
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                 }
                 client.Admin = false;
                 if (unpack_msgpack.ForcePathObject("Admin").AsString.ToLower() !="user") 
@@ -129,7 +132,10 @@ namespace Server.Handle_Packet
                     }                    
                 }));
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "SoundPlayer failed");
+            }
         }
 
         public void Received(Clients client)
@@ -140,7 +146,10 @@ namespace Server.Handle_Packet
                     if (client.LV != null)
                         client.LV.ForeColor = Color.Empty;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "Received failed");
+            }
         }
     }
 }

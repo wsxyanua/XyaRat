@@ -82,7 +82,10 @@ namespace Server.Forms
                     Directory.CreateDirectory(FullPath);
                 File.WriteAllText(FullPath + $"\\Keylogger_{DateTime.Now.ToString("MM-dd-yyyy HH;mm;ss")}.txt", richTextBox1.Text.Replace("\n", Environment.NewLine));
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

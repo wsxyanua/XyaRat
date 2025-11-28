@@ -54,7 +54,10 @@ namespace Server.Handle_Packet
                                 client.Disconnected();
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                         break;
                     }
 
@@ -89,7 +92,10 @@ namespace Server.Handle_Packet
                                 client.Disconnected();
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                         break;
                     }
             }

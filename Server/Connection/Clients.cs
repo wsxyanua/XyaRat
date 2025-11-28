@@ -165,7 +165,10 @@ namespace Server.Connection
                                 LV2.Remove();
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                     new HandleLogs().Addmsg($"Client {Ip} disconnected.", Color.Red);
                     TimeZoneInfo local = TimeZoneInfo.Local;
                     if (local.Id == "China Standard Time"&&Properties.Settings.Default.Notification == true)

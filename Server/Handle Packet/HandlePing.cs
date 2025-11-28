@@ -22,7 +22,10 @@ namespace Server.Handle_Packet
                     else
                         Debug.WriteLine("Temp socket pinged server");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         public void Po_ng(Clients client, MsgPack unpack_msgpack)
@@ -48,7 +51,10 @@ namespace Server.Handle_Packet
                     }
 
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

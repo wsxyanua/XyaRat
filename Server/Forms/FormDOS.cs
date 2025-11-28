@@ -65,7 +65,10 @@ namespace Server.Forms
                     timer1.Start();
                     timer2.Start();
                 }
-                catch { }
+                catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "Stopwatch failed");
+            }
             }
         }
 
@@ -88,7 +91,10 @@ namespace Server.Forms
                 timer2.Stop();
                 status = "is online";
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -130,7 +136,10 @@ namespace Server.Forms
                 PlguinClients.Clear();
                 selectedClients.Clear();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
             this.Hide();
             this.Parent = null;
             e.Cancel = true;

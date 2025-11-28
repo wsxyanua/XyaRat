@@ -35,7 +35,10 @@ namespace Server.Forms
                             listBox1.Items.Add(item.Trim());
                     }
                 }
-                catch { }
+                catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
             }
 
             this.Text = $"{Settings.Version} | Welcome {Environment.UserName}";
@@ -87,7 +90,10 @@ namespace Server.Forms
                 listBox1.Items.Add(textPorts.Text.Trim());
                 textPorts.Clear();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "BtnAdd_Click failed");
+            }
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)

@@ -56,7 +56,10 @@ namespace Server.Handle_Packet
                 }
                 catch (Exception ex) { Debug.WriteLine(ex.Message); }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

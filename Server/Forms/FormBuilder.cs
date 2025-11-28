@@ -44,7 +44,10 @@ namespace Server.Forms
 
                 Properties.Settings.Default.Save();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -81,7 +84,10 @@ namespace Server.Forms
                         listBoxPort.Items.Add(item.Trim());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
 
             try
             {
@@ -92,7 +98,10 @@ namespace Server.Forms
                         listBoxIP.Items.Add(item.Trim());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
 
             if (Properties.Settings.Default.Mutex.Length == 0)
                 txtMutex.Text = getRandomCharacters();
@@ -148,7 +157,10 @@ namespace Server.Forms
                 listBoxPort.Items.Add(textPort.Text.Trim());
                 textPort.Clear();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void BtnRemoveIP_Click(object sender, EventArgs e)
@@ -172,7 +184,10 @@ namespace Server.Forms
                 listBoxIP.Items.Add(textIP.Text.Replace(" ", ""));
                 textIP.Clear();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private async void BtnBuild_Click(object sender, EventArgs e)
@@ -340,7 +355,10 @@ namespace Server.Forms
                 }
                 return tempFile;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "FileStream failed");
+            }
             return "";
         }
 

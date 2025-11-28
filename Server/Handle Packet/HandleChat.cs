@@ -37,7 +37,10 @@ namespace Server.Handle_Packet
                     client.Disconnected();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         public void GetClient(MsgPack unpack_msgpack, Clients client)

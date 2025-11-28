@@ -248,6 +248,7 @@
     <Compile Include="Forms\FormKeylogger.Designer.cs">
       <DependentUpon>FormKeylogger.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\ErrorHandler.cs" />
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\CertificateManager.cs" />
     <Compile Include="Helper\SecureConfig.cs" />

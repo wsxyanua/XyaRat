@@ -192,7 +192,10 @@ namespace Server
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
 
 
             CheckFiles();
@@ -396,7 +399,10 @@ namespace Server
                     client.LV2 = null;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
         #endregion
 
@@ -456,7 +462,10 @@ namespace Server
                         await Task.Delay(15 * 1000);
                     }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
 

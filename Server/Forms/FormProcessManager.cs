@@ -72,7 +72,10 @@ namespace Server.Forms
                     Client?.Disconnected();
                 });
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

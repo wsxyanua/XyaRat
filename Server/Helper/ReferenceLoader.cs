@@ -41,7 +41,10 @@ namespace Server.Helper
                 AppDomain.Unload(childDomain);
                 return;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

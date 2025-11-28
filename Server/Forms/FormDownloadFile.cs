@@ -72,7 +72,10 @@ namespace Server.Forms
                 Client?.Disconnected();
                 timer1?.Dispose();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         public void Send(object obj)

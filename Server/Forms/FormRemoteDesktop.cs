@@ -57,7 +57,10 @@ namespace Server.Forms
             {
                 button1.Tag = (object)"stop";
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void Button1_Click(object sender, EventArgs e)
@@ -88,7 +91,10 @@ namespace Server.Forms
                     msgpack.ForcePathObject("Option").AsString = "stop";
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
-                catch { }
+                catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                 numericUpDown1.Enabled = true;
                 numericUpDown2.Enabled = true;
                 btnSave.Enabled = false;
@@ -116,7 +122,10 @@ namespace Server.Forms
                             Directory.CreateDirectory(FullPath);
                         Process.Start(FullPath);
                     }
-                    catch { }
+                    catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                 }
             }
         }
@@ -136,7 +145,10 @@ namespace Server.Forms
                 myEncoderParameters?.Dispose();
                 myEncoderParameter?.Dispose();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private ImageCodecInfo GetEncoder(ImageFormat format)
@@ -174,7 +186,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void PictureBox1_MouseUp(object sender, MouseEventArgs e)
@@ -199,7 +214,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -217,7 +235,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void Button3_Click(object sender, EventArgs e)
@@ -245,7 +266,10 @@ namespace Server.Forms
                     Client?.Disconnected();
                 });
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void btnKeyboard_Click(object sender, EventArgs e)

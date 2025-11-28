@@ -36,9 +36,9 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
             }
         }
 
@@ -111,7 +111,10 @@ namespace Server.Forms
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void uPLOADToolStripMenuItem_Click(object sender, EventArgs e)
@@ -150,7 +153,10 @@ namespace Server.Forms
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void dELETEToolStripMenuItem_Click(object sender, EventArgs e)
@@ -180,7 +186,10 @@ namespace Server.Forms
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void rEFRESHToolStripMenuItem_Click(object sender, EventArgs e)
@@ -204,7 +213,10 @@ namespace Server.Forms
                     return;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void eXECUTEToolStripMenuItem_Click(object sender, EventArgs e)
@@ -223,9 +235,9 @@ namespace Server.Forms
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
             }
         }
 
@@ -248,9 +260,9 @@ namespace Server.Forms
                 msgpack.ForcePathObject("Path").AsString = "DESKTOP";
                 ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
             }
-            catch
+            catch (Exception ex)
             {
-
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
             }
         }
 
@@ -264,9 +276,9 @@ namespace Server.Forms
                 msgpack.ForcePathObject("Path").AsString = "APPDATA";
                 ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
             }
-            catch
+            catch (Exception ex)
             {
-
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
             }
         }
 
@@ -286,7 +298,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -308,7 +323,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void PasteToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -321,7 +339,10 @@ namespace Server.Forms
                 msgpack.ForcePathObject("File").AsString = toolStripStatusLabel1.Text;
                 ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void RenameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -356,7 +377,10 @@ namespace Server.Forms
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
             }
         }
 
@@ -370,7 +394,10 @@ namespace Server.Forms
                 msgpack.ForcePathObject("Path").AsString = "USER";
                 ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void DriversListsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -390,7 +417,10 @@ namespace Server.Forms
                     Directory.CreateDirectory(FullPath);
                 Process.Start(FullPath);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "OpenClientFolderToolStripMenuItem_Click failed");
+            }
         }
 
         private void FormFileManager_FormClosed(object sender, FormClosedEventArgs e)
@@ -420,7 +450,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void ZipToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,7 +476,10 @@ namespace Server.Forms
                     ThreadPool.QueueUserWorkItem(Client.Send, msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void UnzipToolStripMenuItem_Click(object sender, EventArgs e)
@@ -463,7 +499,10 @@ namespace Server.Forms
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void InstallToolStripMenuItem_Click(object sender, EventArgs e)

@@ -141,7 +141,10 @@ namespace Server.Handle_Packet
 
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
         public async Task SocketDownload(Clients client, MsgPack unpack_msgpack)
         {
@@ -193,7 +196,10 @@ namespace Server.Handle_Packet
                                     SD.Close();
                                 }
                             }
-                            catch { }
+                            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                             finally
                             {
                                 GC.Collect();
@@ -203,7 +209,10 @@ namespace Server.Handle_Packet
                 }
 
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private async Task SaveFileAsync(MsgPack unpack_msgpack, string name)

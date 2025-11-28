@@ -24,7 +24,11 @@ namespace Server.Helper
                 if (!Directory.Exists(logDir))
                     Directory.CreateDirectory(logDir);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Critical: Cannot create log directory - use fallback
+                System.Diagnostics.Debug.WriteLine($"Logger initialization failed: {ex.Message}");
+            }
         }
 
         public static void Error(string message, Exception ex = null)

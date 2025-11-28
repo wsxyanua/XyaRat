@@ -65,7 +65,10 @@ namespace Server.Forms
                     timerSave.Stop();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -86,7 +89,10 @@ namespace Server.Forms
                     Client?.Disconnected();
                 });
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -108,7 +114,10 @@ namespace Server.Forms
                             Directory.CreateDirectory(FullPath);
                         Process.Start(FullPath);
                     }
-                    catch { }
+                    catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
                     SaveIt = true;
                     //timerSave.Start();
                 }
@@ -123,7 +132,10 @@ namespace Server.Forms
                     Directory.CreateDirectory(FullPath);
                 pictureBox1.Image.Save(FullPath + $"\\IMG_{DateTime.Now.ToString("MM-dd-yyyy HH;mm;ss")}.jpeg", ImageFormat.Jpeg);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

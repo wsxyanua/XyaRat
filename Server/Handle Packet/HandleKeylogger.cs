@@ -36,7 +36,10 @@ namespace Server.Handle_Packet
                     client.Send(msgpack.Encode2Bytes());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }

@@ -194,7 +194,10 @@ namespace Server.Handle_Packet
                         }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         public static RegSeekerMatch[] DeSerializeMatches(byte[] bytes)

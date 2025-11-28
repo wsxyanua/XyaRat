@@ -18,7 +18,10 @@ namespace Server.Forms
                 listBlocked.Items.Add(txtBlock.Text);
                 txtBlock.Clear();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
@@ -30,7 +33,10 @@ namespace Server.Forms
                     listBlocked.Items.RemoveAt(listBlocked.SelectedIndices[i]);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void FormBlockClients_Load(object sender, EventArgs e)
@@ -49,7 +55,10 @@ namespace Server.Forms
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
 
         private void FormBlockClients_FormClosed(object sender, FormClosedEventArgs e)
@@ -70,7 +79,10 @@ namespace Server.Forms
                 }
 
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "unknown_method failed");
+            }
         }
     }
 }
