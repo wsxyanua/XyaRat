@@ -8,6 +8,22 @@ namespace Client.Helper
     public static class TrafficObfuscator
     {
         private static readonly Random random = new Random();
+        private static byte[] _obfuscationKey = null;
+        
+        /// <summary>
+        /// Gets the obfuscation key (lazy initialization with secure derivation)
+        /// </summary>
+        private static byte[] ObfuscationKey
+        {
+            get
+            {
+                if (_obfuscationKey == null)
+                {
+                    _obfuscationKey = SecureKeyDerivation.GetObfuscationKey();
+                }
+                return _obfuscationKey;
+            }
+        }
         
         public static byte[] ObfuscateData(byte[] data)
         {
@@ -57,7 +73,7 @@ namespace Client.Helper
 
         private static void XorObfuscate(byte[] data)
         {
-            byte[] key = Encoding.UTF8.GetBytes("XyaObfuscationKey2025");
+            byte[] key = ObfuscationKey;
             for (int i = 0; i < data.Length; i++)
             {
                 data[i] ^= key[i % key.Length];

