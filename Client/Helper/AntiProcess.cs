@@ -27,7 +27,10 @@ namespace Client.Helper
                 BlockThread.Abort();
                 BlockThread = new Thread(Block);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "AntiProcess StopBlock failed");
+            }
         }
 
         //Check to kill processes in a loop

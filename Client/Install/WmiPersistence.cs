@@ -47,7 +47,10 @@ namespace Client.Install
                 
                 filter.Put();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "WMI CreateEventFilter failed");
+            }
         }
 
         private static void CreateEventConsumer(ManagementScope scope, string executablePath)
@@ -63,7 +66,10 @@ namespace Client.Install
                 
                 consumer.Put();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "WMI CreateEventConsumer failed");
+            }
         }
 
         private static void CreateBinding(ManagementScope scope)
@@ -78,7 +84,10 @@ namespace Client.Install
                 
                 binding.Put();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "WMI CreateBinding failed");
+            }
         }
 
         public static void Uninstall()
@@ -92,7 +101,10 @@ namespace Client.Install
                 DeleteInstance(scope, "CommandLineEventConsumer", "Name", ConsumerName);
                 DeleteInstance(scope, "__EventFilter", "Name", FilterName);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "WMI Uninstall failed");
+            }
         }
 
         private static void DeleteInstance(ManagementScope scope, string className, string propertyName, string propertyValue)
@@ -107,7 +119,10 @@ namespace Client.Install
                     obj.Delete();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, $"WMI DeleteInstance {className} failed");
+            }
         }
     }
 }

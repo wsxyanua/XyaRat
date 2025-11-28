@@ -109,7 +109,10 @@ namespace Client.Connection
                 socket?.Close();
                 isConnected = false;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "TcpTransport disconnect failed");
+            }
         }
 
         public Socket GetSocket()

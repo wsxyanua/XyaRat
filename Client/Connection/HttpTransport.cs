@@ -167,7 +167,10 @@ namespace Client.Connection
                 sendBuffer?.Close();
                 isConnected = false;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "HttpTransport disconnect failed");
+            }
         }
 
         public Socket GetSocket()

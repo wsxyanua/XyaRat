@@ -328,7 +328,10 @@ namespace Client.Connection
                 GC.Collect();
                 ActivatePo_ng = true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "KeepAlive packet failed");
+            }
         }
 
         private static void Po_ng(object obj)
@@ -340,7 +343,10 @@ namespace Client.Connection
                     Interval++;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "Po_ng interval update failed");
+            }
         }
 
         

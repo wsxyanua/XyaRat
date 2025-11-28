@@ -178,7 +178,10 @@ namespace Client.Connection
                     AddFallbackHost(domain);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "Failed to initialize fallback hosts");
+            }
         }
     }
 

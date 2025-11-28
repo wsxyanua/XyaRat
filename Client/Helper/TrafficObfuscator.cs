@@ -87,7 +87,10 @@ namespace Client.Helper
                 int delay = random.Next(50, 500);
                 System.Threading.Thread.Sleep(delay);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "AddRandomDelay failed");
+            }
         }
 
         public static byte[] AddNoise(byte[] data, double noiseRatio = 0.1)

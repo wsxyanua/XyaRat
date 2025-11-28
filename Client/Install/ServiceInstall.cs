@@ -61,7 +61,10 @@ namespace Client.Install
                         return true;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "ServiceExists check failed");
+            }
             return false;
         }
 
@@ -78,12 +81,15 @@ namespace Client.Install
                     UseShellExecute = false
                 };
 
-                using (Process process = Process.Start(psi))
+                using (Process process = Process.Start(stopPsi))
                 {
                     process.WaitForExit();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "Service uninstall failed");
+            }
         }
 
         private static void StartService(string serviceName)

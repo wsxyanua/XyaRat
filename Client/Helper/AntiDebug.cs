@@ -67,7 +67,11 @@ namespace Client.Helper
                 if (status == 0 && pbi.Reserved1 != IntPtr.Zero)
                     return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: Anti-debug check failed, assume not debugged
+                Logger.Error(ex);
+            }
             return false;
         }
 
@@ -82,7 +86,11 @@ namespace Client.Helper
                 if (sw.ElapsedMilliseconds > 600 || sw.ElapsedMilliseconds < 400)
                     return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: Timing check failed, assume not debugged
+                Logger.Error(ex);
+            }
             return false;
         }
 
@@ -93,7 +101,11 @@ namespace Client.Helper
                 const int ThreadHideFromDebugger = 0x11;
                 NtSetInformationThread(GetCurrentThread(), ThreadHideFromDebugger, IntPtr.Zero, 0);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: Thread hiding failed
+                Logger.Error(ex);
+            }
         }
 
         [DllImport("kernel32.dll")]

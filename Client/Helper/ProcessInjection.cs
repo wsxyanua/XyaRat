@@ -143,7 +143,11 @@ namespace Client.Helper
                                 processList.Add(proc.Id);
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            // Non-critical: Single process check failed, continue with others
+                            Logger.Error(ex);
+                        }
                     }
                 }
 

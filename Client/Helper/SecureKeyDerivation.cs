@@ -133,7 +133,11 @@ namespace Client.Helper
                 // Zero out
                 Array.Clear(key, 0, key.Length);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: Key cleanup failed but doesn't affect operation
+                Logger.Error(ex);
+            }
         }
 
         /// <summary>

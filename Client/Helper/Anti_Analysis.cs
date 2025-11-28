@@ -40,7 +40,11 @@ namespace Client.Helper
                 }
                 if (count == 0) return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: CPU check failed, assume not VM
+                Logger.Error(ex);
+            }
             return false;
         }
 
@@ -63,7 +67,11 @@ namespace Client.Helper
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: MAC check failed, assume not VM
+                Logger.Error(ex);
+            }
             return false;
         }
 
@@ -86,7 +94,11 @@ namespace Client.Helper
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Non-critical: Manufacturer check failed, assume not VM
+                Logger.Error(ex);
+            }
             return false;
         }
 

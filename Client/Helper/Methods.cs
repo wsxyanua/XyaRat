@@ -30,7 +30,10 @@ namespace Client.Helper
                 ClientSocket.SslClient?.Close();
                 ClientSocket.TcpClient?.Close();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "ClientOnExit cleanup failed");
+            }
         }
 
         public static string Antivirus()
@@ -82,7 +85,10 @@ namespace Client.Helper
             {
                 SetThreadExecutionState(EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "PreventSleep failed");
+            }
         }
 
         public static string GetActiveWindowTitle()
@@ -97,7 +103,10 @@ namespace Client.Helper
                     return buff.ToString();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "GetActiveWindowTitle failed");
+            }
             return "";
         }
 
@@ -115,19 +124,28 @@ namespace Client.Helper
 
                 key.Close();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "ClearSetting Environment cleanup failed");
+            }
             try
             {
                 //CompMgmtLauncher
                 Registry.CurrentUser.OpenSubKey("Software", true).OpenSubKey("Classes", true).DeleteSubKeyTree("mscfile");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "ClearSetting mscfile cleanup failed");
+            }
             try
             {
                 //Fodhelper
                 Registry.CurrentUser.OpenSubKey("Software", true).OpenSubKey("Classes", true).DeleteSubKeyTree("ms-settings");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleNonCritical(() => { }, ex, "ClearSetting ms-settings cleanup failed");
+            }
         }
     }
 }
