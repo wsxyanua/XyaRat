@@ -151,14 +151,32 @@ public class AuthService
         {
             if (!await _context.Users.AnyAsync())
             {
-                var defaultAdmin = await CreateUserAsync("admin", "admin123", "Admin");
+                // Read from configuration instead of hardcoded
+                var username = _configuration["DefaultAdmin:Username"];
+                var password = _configuration["DefaultAdmin:Password"];
+                var createIfNotExists = bool.Parse(_configuration["DefaultAdmin:CreateIfNotExists"] ?? "false");
+
+                if (!createIfNotExists || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                {
+                    _logger.LogError("No users exist and default admin creation is disabled or not configured!");
+                    Console.WriteLine("==========================================================");
+                    Console.WriteLine("⚠️  ERROR: No users in database!");
+                    Console.WriteLine("Configure DefaultAdmin in appsettings.json or environment variables:");
+                    Console.WriteLine("  DefaultAdmin__Username");
+                    Console.WriteLine("  DefaultAdmin__Password");
+                    Console.WriteLine("  DefaultAdmin__CreateIfNotExists=true");
+                    Console.WriteLine("==========================================================");
+                    return;
+                }
+
+                var defaultAdmin = await CreateUserAsync(username, password, "Admin");
                 if (defaultAdmin != null)
                 {
-                    _logger.LogWarning("Created default admin user. Please change the password!");
+                    _logger.LogWarning("Created default admin user from configuration");
                     Console.WriteLine("==========================================================");
                     Console.WriteLine("DEFAULT ADMIN CREATED:");
-                    Console.WriteLine("Username: admin");
-                    Console.WriteLine("Password: admin123");
+                    Console.WriteLine($"Username: {username}");
+                    Console.WriteLine("Password: [CONFIGURED]");
                     Console.WriteLine("⚠️  CHANGE THIS PASSWORD IMMEDIATELY!");
                     Console.WriteLine("==========================================================");
                 }

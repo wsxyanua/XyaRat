@@ -18,9 +18,9 @@ echo -e "${BLUE}========================================${NC}"
 # Check prerequisites
 echo -e "\n${YELLOW}[1/7] Checking prerequisites...${NC}"
 
-if ! command -v msbuild &> /dev/null; then
-    echo -e "${RED}❌ MSBuild not found. Install Mono:${NC}"
-    echo -e "${YELLOW}   sudo apt install mono-complete msbuild${NC}"
+if ! command -v msbuild &> /dev/null && ! command -v xbuild &> /dev/null; then
+    echo -e "${RED}❌ MSBuild/XBuild not found. Install Mono:${NC}"
+    echo -e "${YELLOW}   sudo apt install mono-complete${NC}"
     exit 1
 fi
 
@@ -49,11 +49,11 @@ echo -e "${GREEN}✅ NuGet packages restored${NC}"
 
 # Build RAT solution (Server + Client + Plugins)
 echo -e "\n${YELLOW}[3/7] Building RAT Solution (Server + Client + Plugins)...${NC}"
-msbuild /nologo /v:minimal /p:Configuration=Release XyaRat.sln || {
+msbuild /nologo /v:minimal /p:Configuration=Release XyaRat.sln || xbuild /nologo /v:minimal /p:Configuration=Release XyaRat.sln || {
     echo -e "${RED}❌ RAT build failed${NC}"
     exit 1
 }
-echo -e "${GREEN}✅ RAT Solution built successfully${NC}"
+echo -e "${GREEN}✅ RAT built successfully${NC}"
 
 # Build WebPanel Backend
 echo -e "\n${YELLOW}[4/7] Building WebPanel Backend...${NC}"

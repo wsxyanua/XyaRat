@@ -250,6 +250,7 @@
     </Compile>
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\CertificateManager.cs" />
+    <Compile Include="Helper\SecureConfig.cs" />
     <Compile Include="Helper\TrafficDeobfuscator.cs" />
     <Compile Include="Helper\ModernTheme.cs" />
     <Compile Include="Forms\FormPorts.cs">

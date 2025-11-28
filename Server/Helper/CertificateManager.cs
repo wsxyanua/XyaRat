@@ -28,8 +28,11 @@ namespace Server.Helper
             "server.pfx"
         );
 
-        // Certificate password (should be stored securely, not hardcoded)
-        private static readonly string CertificatePassword = "XyaRatSecure2025";
+        // Certificate password loaded from secure storage
+        private static string GetCertificatePassword()
+        {
+            return SecureConfig.GetCertificatePassword();
+        }
 
         private static X509Certificate2 _serverCertificate;
 
@@ -45,9 +48,10 @@ namespace Server.Helper
             {
                 if (File.Exists(ServerCertificatePath))
                 {
+                    var password = GetCertificatePassword();
                     _serverCertificate = new X509Certificate2(
                         ServerCertificatePath,
-                        CertificatePassword,
+                        password,
                         X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
                     );
 
@@ -59,7 +63,8 @@ namespace Server.Helper
                     // Generate self-signed certificate if none exists
                     Logger.Log("[Certificate] No certificate found, generating self-signed certificate", Logger.LogLevel.Warning);
                     _serverCertificate = GenerateSelfSignedCertificate();
-                    SaveCertificate(_serverCertificate, ServerCertificatePath, CertificatePassword);
+                    var password = GetCertificatePassword();
+                    SaveCertificate(_serverCertificate, ServerCertificatePath, password);
                     return _serverCertificate;
                 }
             }
@@ -115,12 +120,13 @@ namespace Server.Helper
                         DateTimeOffset.Now.AddDays(-1),
                         DateTimeOffset.Now.AddYears(5)
                     );
-
                     // Export with private key
+                    var password = GetCertificatePassword();
                     return new X509Certificate2(
-                        certificate.Export(X509ContentType.Pfx, CertificatePassword),
-                        CertificatePassword,
+                        certificate.Export(X509ContentType.Pfx, password),
+                        password,
                         X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
+                    );  X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
                     );
                 }
             }
